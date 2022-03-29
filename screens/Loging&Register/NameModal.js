@@ -12,6 +12,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   StatusBar,
+  Platform,
 } from "react-native";
 import { MaterialIcons, AntDesign, FontAwesome5 } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
@@ -118,6 +119,8 @@ export const NameModal = (props) => {
                     alignItems: "flex-end",
                     width: "100%",
                     height: "5%",
+                    marginBottom:
+                      Dimensions.get("window").height >= 800 ? 0 : "5%",
                   }}
                 >
                   <TouchableOpacity

@@ -39,7 +39,7 @@ export const AvatarChoose = (props) => {
   };
   useEffect(() => {
     setImage(route.params?.imageURI);
-  }, [route.params]);
+  }, [route.params?.imageURI]);
   const imageParam = route.params?.imageURI;
   const { colors } = useTheme();
   const [showModal, setShowModal] = useState();

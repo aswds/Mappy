@@ -41,6 +41,7 @@ import { SliderBox } from "react-native-image-slider-box";
 import { Image as CachedImage } from "react-native-expo-image-cache";
 import { Skeleton } from "moti/skeleton";
 import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
+import { noPostStyles } from "../../styles/noPostStyles";
 const ProfileScreen = (props) => {
   const { colors } = useTheme();
   const theme = useTheme();
@@ -117,7 +118,7 @@ const ProfileScreen = (props) => {
   const username = props.currentUser.username;
   const email = props.currentUser.email;
   return (
-    <SafeAreaView style={styles.containerSafeArea}>
+    <SafeAreaView>
       <ScrollView
         refreshControl={
           <RefreshControl
@@ -207,22 +208,29 @@ const ProfileScreen = (props) => {
             />
           </View>
         </View>
-        <View style={{ height: "100%" }}>
-          {posts.length > 0 ? (
-            <View style={styles.postContainer}>
-              {posts.map((item) => renderPost(item))}
-            </View>
-          ) : (
-            <View style={styles.noPostContainer}>
-              <MaterialCommunityIcons
-                name="post"
-                size={170}
-                color={theme.dark ? "white" : "black"}
-              />
-              <Text style={styles.noPostText}>no posts yet</Text>
-            </View>
-          )}
-        </View>
+        {posts.length > 0 ? (
+          <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+            {posts.map((item) => renderPosts(item))}
+          </View>
+        ) : (
+          <View
+            style={[
+              noPostStyles.noPostContainer,
+              {
+                justifyContent: "flex-start",
+              },
+            ]}
+          >
+            <MaterialCommunityIcons
+              name="post"
+              size={150}
+              color={theme.dark ? "white" : "black"}
+            />
+            <Text style={[noPostStyles.noPostText, { color: colors.text }]}>
+              no posts yet
+            </Text>
+          </View>
+        )}
       </ScrollView>
 
       <TouchableOpacity
@@ -323,7 +331,7 @@ const makeStyles = (colors: any, theme) =>
     },
     textStyle: {
       color: colors.text,
-      fontFamily: "Lato-Bold",
+      fontFamily: "WorkSans-Bold",
     },
     image: {
       width: "100%",
@@ -393,7 +401,6 @@ const makeStyles = (colors: any, theme) =>
       marginVertical: actuatedNormalize(10),
     },
     noPostContainer: {
-      backgroundColor: colors.background,
       alignItems: "center",
       justifyContent: "center",
     },

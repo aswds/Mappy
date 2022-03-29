@@ -7,13 +7,18 @@ import ImageBrowserScreen from "../../screens/Post/ImageBrowserScreen";
 import { useNavigation, useTheme } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native";
 import { Entypo, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { HeaderBackButton } from "@react-navigation/elements";
 const MyPostStack = createNativeStackNavigator();
 export const PostCreatingNavigator = (props) => {
   const { colors } = useTheme();
   const theme = useTheme();
   const navigation = useNavigation();
   return (
-    <MyPostStack.Navigator screenOptions={{ headerShown: false }}>
+    <MyPostStack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
       <MyPostStack.Screen
         name="PostCreatingScreen"
         component={PostCreatingScreen}

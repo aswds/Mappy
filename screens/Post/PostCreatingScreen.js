@@ -48,7 +48,7 @@ const PostCreatingScreen = (props) => {
       }
       delete route.params?.photos;
     }
-  }, [route.params]);
+  }, [route.params?.photos]);
 
   const dispatch = useDispatch();
   const locationData = route.params?.location;

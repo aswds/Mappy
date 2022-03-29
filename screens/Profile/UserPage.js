@@ -40,6 +40,7 @@ import { Image as CachedImage } from "react-native-expo-image-cache";
 import { Skeleton } from "moti/skeleton";
 import { onFollow, onUnFollow } from "../../components/follow";
 import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
+import { noPostStyles } from "../../styles/noPostStyles";
 const UserPage = (props) => {
   const navigation = useNavigation();
   const route = useRoute();
@@ -398,26 +399,17 @@ const UserPage = (props) => {
             {userPosts.map((item) => renderPosts(item))}
           </View>
         ) : (
-          <View
-            style={{
-              height: Dimensions.get("window").height / 2.3,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
+          <View style={noPostStyles.noPostContainer}>
             <MaterialCommunityIcons
               name="post"
               size={150}
               color={theme.dark ? "white" : "black"}
             />
             <Text
-              style={{
-                margin: 20,
-                color: theme.dark ? "white" : "black",
-                fontFamily: "Lato-Regular",
-                fontSize: 20,
-                textTransform: "uppercase",
-              }}
+              style={[
+                noPostStyles.noPostText,
+                { color: theme.dark ? "white" : "black" },
+              ]}
             >
               no posts yet
             </Text>

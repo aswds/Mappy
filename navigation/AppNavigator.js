@@ -39,33 +39,6 @@ export const AppNavigator = (props) => {
   const styles = makeStyles(colors);
   const navigation = useNavigationContainerRef();
   const theme = useSelector((state) => state.themeState.theme);
-  const [firstLaunch, setFirstLaunch] = useState();
-  useEffect(() => {
-    AsyncStorage.getItem("alreadyLaunched").then((value) => {
-      if (value == null) {
-        AsyncStorage.setItem("alreadyLaunched", JSON.stringify(true));
-        setFirstLaunch(true);
-      } else {
-        AsyncStorage.setItem("alreadyLaunced", JSON.stringify(false));
-        setFirstLaunch(false);
-      }
-      AsyncStorage.clear();
-    }, []);
-  });
-
-  if (firstLaunch) {
-    return (
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
-            component={IntroSlider}
-            name="IntroSlider"
-            options={{ headerShown: false }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-    );
-  }
   return (
     <NavigationContainer theme={theme} ref={navigation}>
       <Stack.Navigator

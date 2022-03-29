@@ -118,8 +118,10 @@ const EditProfile = (props) => {
   };
   const iconColorAndUserInput = colors.text;
   const placeholderColor = "#616161";
+
   const profileImage = route.params?.profileImage;
   const usernameDisplay = props.currentUser.username;
+  const userName = props.currentUser.name;
   const gmailDisplayed = props.currentUser.email;
   const countryDisplayed = props.currentUser.country;
   const cityDisplayed = props.currentUser.city;
@@ -131,7 +133,7 @@ const EditProfile = (props) => {
   const [phoneNumber, setPhoneNumber] = useState(phoneNumberDisplyed);
   const [showModal, setShowModal] = useState(false);
   const [image, setImage] = useState(profileImage);
-  const [name, setName] = useState();
+  const [name, setName] = useState(userName);
   const [secondName, setSecondName] = useState();
   const styles = makeStyles(colors, theme);
   return (
