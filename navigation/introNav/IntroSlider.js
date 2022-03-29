@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   StyleSheet,
   View,
@@ -6,54 +6,71 @@ import {
   Image,
   SafeAreaView,
   StatusBar,
+  Button,
+  Animated,
 } from "react-native";
 import AppIntroSlider from "react-native-app-intro-slider";
 import { useNavigation, useTheme } from "@react-navigation/native";
-import AnimatedLottieView from "lottie-react-native";
+import LottieView from "lottie-react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Constants from "expo-constants";
+import vacationAnimation from "../../src/image/lottieAnimations/vacation.json";
+import partyAnimation from "../../src/image/lottieAnimations/friends.json";
+import bookingAnimation from "../../src/image/lottieAnimations/68973-calendar.json";
 const slides = [
   {
     key: 1,
     title: "Welcome to Mappy!",
-    text: "Plan your travel",
-    lottieAnimation: require("../../src/image/lottieAnimations/68973-calendar.json"),
+    text: "Seems it's your first launch",
     image: require("../../src/image/green-logo1.png"),
   },
   {
     key: 2,
-    title: "Title 2",
-    text: "Other cool stuff",
-    image: require("../../src/image/green-logo1.png"),
+    title: "Plan your travel",
+    lottieAnimation: bookingAnimation,
+    text: "We'll remind you about your plans",
+    // image: require("../../src/image/green-logo1.png"),
   },
   {
     key: 3,
-    title: "Rocket guy",
-    text: "I'm already out of descriptions\n\nLorem ipsum bla bla bla",
-    image: require("../../src/image/green-logo1.png"),
+    title: "Find tickets for a whole party",
+    lottieAnimation: partyAnimation,
+    text: "Invite your friends and travel together",
+    // image: require("../../src/image/green-logo1.png"),
   },
   {
     key: 4,
-    title: "Rocket guy",
-    text: "I'm already out of descriptions\n\nLorem ipsum bla bla bla",
-    image: require("../../src/image/green-logo1.png"),
+    title: "Share your vacations",
+    lottieAnimation: vacationAnimation,
+    text: "Enjoy holidays and share your expirience with new users",
+    // image: require("../../src/image/green-logo1.png"),
   },
 ];
 
-export default function IntroSlider() {
+export default function IntroSlider(props) {
   const { colors } = useTheme();
+  const { onDone } = props;
   const theme = useTheme();
   const styles = makeStyles(colors, theme);
-
   const navigation = useNavigation();
 
   _renderItem = ({ item }) => {
     return (
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
         <StatusBar barStyle={theme.dark ? "light-content" : "dark-content"} />
         <View style={styles.slide}>
-          <View style={{ marginBottom: "30%" }}>
+          <View style={styles.titleContainer}>
             <Text style={styles.title}>{item.title}</Text>
           </View>
-          <AnimatedLottieView source={item.lottieAnimation} autoPlay={true} />
+          {item.key > 1 && (
+            <LottieView
+              source={item.lottieAnimation}
+              autoPlay={true}
+              loop={true}
+              speed={0.7}
+              key={item.key}
+            />
+          )}
           <Image source={item.image} style={styles.image} />
 
           <Text style={styles.text}>{item.text}</Text>
@@ -62,15 +79,14 @@ export default function IntroSlider() {
     );
   };
   _onDone = () => {
-    // User finished the introduction. Show real app through
-    // navigation or simply by controlling state
+    navigation.navigate("Home", { screen: "Home" });
   };
   {
     return (
       <AppIntroSlider
         renderItem={_renderItem}
         data={slides}
-        onDone={_onDone}
+        onDone={onDone}
         activeDotStyle={{
           backgroundColor: colors.primary,
           width: 40,
@@ -80,7 +96,6 @@ export default function IntroSlider() {
           width: 40,
           backgroundColor: "lightgrey",
         }}
-        nextLabel={"Next"}
         style={{ backgroundColor: colors.background }}
       />
     );
@@ -89,9 +104,10 @@ export default function IntroSlider() {
 const makeStyles = (colors: any, theme) =>
   StyleSheet.create({
     text: {
-      fontSize: 17,
+      fontSize: 18,
       fontFamily: "WorkSans-Regular",
       textAlign: "center",
+      maxWidth: "80%",
     },
     titleContainer: {},
 
@@ -102,14 +118,21 @@ const makeStyles = (colors: any, theme) =>
       zIndex: -1,
       bottom: 30,
     },
+    titleContainer: {
+      marginBottom: "40%",
+      flexWrap: "nowrap",
+      maxWidth: "90%",
+    },
     title: {
       fontSize: 28,
       fontFamily: "WorkSans-Bold",
       color: "rgb(10, 132, 255)",
+      textAlign: "center",
     },
 
     slide: {
       flex: 1,
+      backgroundColor: "white",
       justifyContent: "space-evenly",
       alignItems: "center",
     },

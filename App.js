@@ -4,7 +4,6 @@ import LottieAnimation from "./components/lottieAnimation";
 import { connect, Provider, useDispatch, useSelector } from "react-redux";
 import { store } from "./redux/store/store";
 import { AppNavigator } from "./navigation/AppNavigator";
-``;
 import { LoginAndRegister } from "./navigation/LoginAndRegisterNavigator";
 import firebaseConfig from "./firebase";
 import firebase from "firebase";
@@ -12,7 +11,6 @@ import AppLoading from "expo-app-loading";
 import { useFonts } from "expo-font";
 import LottieAnimationLogin from "./components/lottieAnimationLogin";
 import { theme } from "./components/theme";
-import { bindActionCreators } from "redux";
 if (firebase.apps.length == 0) {
   firebase.initializeApp(firebaseConfig);
 } else {
@@ -35,13 +33,13 @@ export default function App(props) {
   }, []);
   const [isLoaded] = useFonts({
     "Lato-Regular": require("./assets/fonts/Lato/Lato-Regular.ttf"),
-    // "Lato-Bold": require("./assets/fonts/Lato/Lato-Bold.ttf"),
-    // "Poppins-Bold": require("./assets/fonts/Poppins/Poppins-Bold.ttf"),
-    // "Poppins-Regular": require("./assets/fonts/Poppins/Poppins-Regular.ttf"),
-    // "Roboto-Bold": require("./assets/fonts/Roboto/Roboto-Bold.ttf"),
-    // "Roboto-Regular": require("./assets/fonts/Roboto/Roboto-Regular.ttf"),
-    // "WorkSans-Bold": require("./assets/fonts/WorkSans/WorkSans-Bold.ttf"),
-    // "WorkSans-Regular": require("./assets/fonts/WorkSans/WorkSans-Regular.ttf"),
+    "Lato-Bold": require("./assets/fonts/Lato/Lato-Bold.ttf"),
+    "Poppins-Bold": require("./assets/fonts/Poppins/Poppins-Bold.ttf"),
+    "Poppins-Regular": require("./assets/fonts/Poppins/Poppins-Regular.ttf"),
+    "Roboto-Bold": require("./assets/fonts/Roboto/Roboto-Bold.ttf"),
+    "Roboto-Regular": require("./assets/fonts/Roboto/Roboto-Regular.ttf"),
+    "WorkSans-Bold": require("./assets/fonts/WorkSans/WorkSans-Bold.ttf"),
+    "WorkSans-Regular": require("./assets/fonts/WorkSans/WorkSans-Regular.ttf"),
   });
 
   if (!isLoaded) {
@@ -62,12 +60,13 @@ export default function App(props) {
       </View>
     );
   }
+
   return (
     <View style={styles.container}>
-      {/* <Provider store={store}>
-        <StatusBar barStyle={"light-content"} />
+      <Provider store={store}>
+        <StatusBar barStyle={"auto"} />
         <AppNavigator />
-      </Provider> */}
+      </Provider>
     </View>
   );
 }

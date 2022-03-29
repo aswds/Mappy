@@ -76,12 +76,10 @@ const CustomDrawerItems = (props) => {
         <SafeAreaView style={{ flex: 1 }}>
           <View
             style={{
-              marginBottom:
-                Dimensions.get("window").height >= 800
-                  ? 0
-                  : actuatedNormalize(20),
+              marginVertical: "10%",
               alignItems: "flex-start",
               marginLeft: "10%",
+              flexDirection: "row",
             }}
           >
             <View
@@ -114,7 +112,7 @@ const CustomDrawerItems = (props) => {
               </Text>
             </TouchableOpacity>
           </View>
-          <View>
+          <View style={styles.drawerListItems}>
             <DrawerItemList {...props} />
           </View>
           <View style={styles.preferenceContainer}>
@@ -190,7 +188,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     alignItems: "center",
   },
-
+  drawerListItems: {
+    borderColor: "lightgrey",
+    borderTopWidth: 2,
+    paddingVertical: "5%",
+  },
   item: {
     flexDirection: "row",
     alignItems: "center",
