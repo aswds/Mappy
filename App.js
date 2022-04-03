@@ -10,7 +10,11 @@ import firebase from "firebase";
 import AppLoading from "expo-app-loading";
 import { useFonts } from "expo-font";
 import LottieAnimationLogin from "./components/lottieAnimationLogin";
-import { theme } from "./components/theme";
+import { theme as DefaultTheme } from "./components/theme";
+import { DarkTheme, NavigationContainer } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import ThemeProvider from "./Theme/ThemeProvider";
+import ThemeWrapper from "./Theme/ThemeWraper";
 if (firebase.apps.length == 0) {
   firebase.initializeApp(firebaseConfig);
 } else {
@@ -19,6 +23,8 @@ if (firebase.apps.length == 0) {
 export default function App(props) {
   const [loggedIn, setloggedIn] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const [themeLoaded, setThemeLoaded] = useState(false);
+  const [theme, setTheme] = useState(DefaultTheme);
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
@@ -31,6 +37,7 @@ export default function App(props) {
       }
     });
   }, []);
+
   const [isLoaded] = useFonts({
     "Lato-Regular": require("./assets/fonts/Lato/Lato-Regular.ttf"),
     "Lato-Bold": require("./assets/fonts/Lato/Lato-Bold.ttf"),
@@ -42,7 +49,7 @@ export default function App(props) {
     "WorkSans-Regular": require("./assets/fonts/WorkSans/WorkSans-Regular.ttf"),
   });
 
-  if (!isLoaded) {
+  if (!isLoaded && !themeLoaded) {
     return <AppLoading />;
   }
 
@@ -62,12 +69,15 @@ export default function App(props) {
   }
 
   return (
-    <View style={styles.container}>
-      <Provider store={store}>
-        <StatusBar barStyle={"auto"} />
-        <AppNavigator />
-      </Provider>
-    </View>
+    <ThemeProvider>
+      <ThemeWrapper>
+        <Provider store={store}>
+          <NavigationContainer>
+            <AppNavigator />
+          </NavigationContainer>
+        </Provider>
+      </ThemeWrapper>
+    </ThemeProvider>
   );
 }
 

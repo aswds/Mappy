@@ -7,10 +7,18 @@ import {
   ScrollView,
 } from "react-native";
 import { Entypo } from "@expo/vector-icons";
+import { useTheme } from "../../Theme/ThemeProvider";
 
 const HomeScreen = (props) => {
+  const { theme } = useTheme();
+  const colors = theme.colors;
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView
+      contentContainerStyle={{
+        ...styles.container,
+        backgroundColor: colors.background,
+      }}
+    >
       <Text>Hello</Text>
     </ScrollView>
   );

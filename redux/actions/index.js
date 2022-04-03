@@ -7,9 +7,12 @@ import {
   USER_FOLLOWING_STATE_CHANGE,
   USER_FOLLOWERS_STATE_CHANGE,
   SWITCH_THEME,
+  USER_INFO_LOADED,
+  USER_INFO_LOADING,
 } from "../constans";
 export function fetchUser() {
   return (dispatch) => {
+    dispatch({ type: USER_INFO_LOADING });
     firebase
       .firestore()
       .collection("users")
@@ -18,7 +21,7 @@ export function fetchUser() {
       .then((snapshot) => {
         if (snapshot.exists) {
           return dispatch({
-            type: USER_STATE_CHANGE,
+            type: USER_INFO_LOADED,
             currentUser: snapshot.data(),
           });
         } else {

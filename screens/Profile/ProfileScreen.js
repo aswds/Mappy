@@ -5,7 +5,6 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  SafeAreaView,
   Dimensions,
   TouchableWithoutFeedback,
   RefreshControl,
@@ -30,6 +29,7 @@ import {
   FontAwesome,
   Ionicons,
   MaterialCommunityIcons,
+  FontAwesome5,
 } from "@expo/vector-icons";
 import WhiteButton from "../../components/headerComponents/whiteButton";
 import { actuatedNormalize } from "../../components/actuaterNormalize";
@@ -39,24 +39,47 @@ import firebase from "firebase";
 import { Asset } from "expo-asset";
 import { SliderBox } from "react-native-image-slider-box";
 import { Image as CachedImage } from "react-native-expo-image-cache";
-import { Skeleton } from "moti/skeleton";
-import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { noPostStyles } from "../../styles/noPostStyles";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useTheme } from "../../Theme/ThemeProvider";
+import { RenderPosts } from "../../components/ProfileFunc/RenderPost";
 const ProfileScreen = (props) => {
-  const { colors } = useTheme();
-  const theme = useTheme();
+  const { theme } = useTheme();
+  const colors = theme.colors;
   const { postIsUploading, posts } = props;
   const [locationPost, setLocationPost] = useState(false);
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
-  const [image, setImage] = useState(props.currentUser.userImage);
+  const [image, setImage] = useState();
   const [isLoading, setIsLoading] = useState();
   const navigation = useNavigation();
   const route = useRoute();
   const styles = makeStyles(colors, theme);
+  const userLoading = useSelector((state) => {
+    return state.userState.loading;
+  });
+  if (props.currentUser == undefined || posts == undefined) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator />
+      </View>
+    );
+  }
+  useEffect(() => {
+    if (route.params?.imageURI) {
+      setImage(cameraImage);
+    }
+  }, [route.params]);
+  useEffect(() => {
+    props.fetchUser();
+    props.fetchUserPosts();
+    props.fetchUserFollowing();
+    props.fetchUserFollowers();
+  }, [refresh, postIsUploading]);
   const renderPost = (item) => {
     return (
-      <View style={styles.sliderBoxContainer} key={item.id}>
+      <TouchableOpacity style={styles.sliderBoxContainer} key={item.id}>
         <SliderBox
           sliderBoxHeight={Dimensions.get("window").width / 3}
           imageLoadingColor={colors.text}
@@ -70,7 +93,7 @@ const ProfileScreen = (props) => {
           }}
           parentWidth={Dimensions.get("window").width / 3}
         />
-      </View>
+      </TouchableOpacity>
     );
   };
 
@@ -78,63 +101,41 @@ const ProfileScreen = (props) => {
     setRefresh(true);
     setTimeout(() => {
       setRefresh(false);
-    }, 1500);
+    }, 1000);
   };
-
-  useEffect(() => {
-    props.fetchUser();
-    props.fetchUserPosts();
-    props.fetchUserFollowing();
-    props.fetchUserFollowers();
-    navigation.addListener("Focus", () => {
-      setLoading(!loading);
-    });
-  }, [loading, refresh]);
-
-  useEffect(() => {
-    if (route.params?.imageURI) {
-      setImage(cameraImage);
-    } else if (gettingImage) {
-      setImage(gettingImage);
-    }
-  }, [route.params]);
-  useEffect(() => {
-    setImage(props.currentUser.userImage);
-  }, [props.currentUser.userImage]);
-  if (
-    props.currentUser === undefined ||
-    props.currentUser.userImage === null ||
-    props.following === undefined
-  ) {
-    return (
-      <View style={{ flex: 1, backgroundColor: colors.background }}>
-        <ActivityIndicator size={"small"} color={colors.text} />
-      </View>
-    );
-  }
-
   const cameraImage = route.params?.imageURI ? route.params.imageURI : null;
-  const gettingImage = props.currentUser.userImage;
-  const username = props.currentUser.username;
-  const email = props.currentUser.email;
+  const insets = useSafeAreaInsets();
   return (
-    <SafeAreaView>
+    <>
       <ScrollView
         refreshControl={
           <RefreshControl
             refreshing={refresh}
             onRefresh={onRefresh}
-            style={styles.refreshControl}
-            tintColor={"white"}
+            style={{ ...styles.refreshControl }}
+            tintColor={theme.dark ? "white" : "black"}
           />
         }
-        contentContainerStyle={{ height: Dimensions.get("window").height }}
         showsVerticalScrollIndicator={false}
+        style={{ backgroundColor: colors.background }}
       >
-        <View style={styles.profileInfoContainer}>
-          <View style={styles.imageContainer}>
-            <Skeleton show={false}>
-              {!image || cameraImage ? (
+        <View
+          style={{
+            ...styles.profileInfoContainer,
+            marginTop: insets.top,
+          }}
+        >
+          <View
+            style={{
+              marginTop: "10%",
+              width: "100%",
+              flexDirection: "row",
+              alignItems: "center",
+              paddingLeft: "5%",
+            }}
+          >
+            <View style={styles.imageContainer}>
+              {!props.currentUser.userImage || cameraImage ? (
                 <Image
                   source={
                     image
@@ -146,17 +147,40 @@ const ProfileScreen = (props) => {
               ) : (
                 <CachedImage
                   uri={image}
-                  defaultSource={{ uri: image }}
+                  defaultSource={{ uri: props.currentUser.userImage }}
                   style={styles.image}
                 />
               )}
-            </Skeleton>
+            </View>
+
+            <View style={{ justifyContent: "center", paddingLeft: 15 }}>
+              <View style={styles.usernameContainer}>
+                <Text style={styles.username}>
+                  `{props.currentUser.username}
+                </Text>
+                {/* <TouchableOpacity
+                  style={styles.settingButton}
+                  onPress={() => {
+                    navigation.push("Settings");
+                  }}
+                >
+                  <AntDesign name="setting" size={30} color={colors.text} />
+                </TouchableOpacity> */}
+              </View>
+              <View style={styles.emailContainer}>
+                <Text style={styles.email}>USA, Texas</Text>
+              </View>
+              <View>
+                <Text style={{ fontFamily: "Lato-Regular", color: "grey" }}>
+                  Have visited 6 countries
+                </Text>
+              </View>
+            </View>
           </View>
-          <View style={styles.usernameContainer}>
-            <Text style={styles.username}>`{username}</Text>
-          </View>
-          <View style={styles.emailContainer}>
-            <Text style={styles.email}>{email}</Text>
+          <View style={{ marginHorizontal: "5%", marginVertical: 20 }}>
+            <Text style={{ color: colors.text }}>
+              Nigga Nigga Nigga Nigga Nigga Nigga Nigga Nigga Nigga
+            </Text>
           </View>
           <View style={styles.followContainer}>
             <TouchableOpacity
@@ -167,7 +191,7 @@ const ProfileScreen = (props) => {
               }}
               onPress={() => {
                 navigation.push("Follow", {
-                  username: username,
+                  username: props.currentUser.username,
                   initialScreen: "Followers",
                 });
               }}
@@ -184,7 +208,7 @@ const ProfileScreen = (props) => {
               }}
               onPress={() => {
                 navigation.navigate("Follow", {
-                  username: username,
+                  username: props.currentUser.username,
                   initialScreen: "Following",
                 });
               }}
@@ -203,6 +227,15 @@ const ProfileScreen = (props) => {
               onPress={() => {
                 navigation.push("EditProfile", { profileImage: image });
               }}
+              icon={
+                <View style={{}}>
+                  <MaterialCommunityIcons
+                    name="account-edit"
+                    size={20}
+                    color={colors.text}
+                  />
+                </View>
+              }
               buttonStyle={styles.buttonStyle}
               textStyle={styles.textStyle}
             />
@@ -210,7 +243,9 @@ const ProfileScreen = (props) => {
         </View>
         {posts.length > 0 ? (
           <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-            {posts.map((item) => renderPosts(item))}
+            {posts.map((item) => (
+              <RenderPosts item={item} key={item.id} />
+            ))}
           </View>
         ) : (
           <View
@@ -234,15 +269,6 @@ const ProfileScreen = (props) => {
       </ScrollView>
 
       <TouchableOpacity
-        style={styles.settingButton}
-        onPress={() => {
-          navigation.push("Settings");
-        }}
-      >
-        <AntDesign name="setting" size={35} color={colors.text} />
-      </TouchableOpacity>
-
-      <TouchableOpacity
         style={styles.addingPost}
         onPress={() => {
           navigation.push("PostCreatingNavigator", {
@@ -251,10 +277,11 @@ const ProfileScreen = (props) => {
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
         }}
       >
-        <AntDesign name="plus" size={actuatedNormalize(45)} color="black" />
+        <AntDesign name="plus" size={actuatedNormalize(45)} color={"black"} />
       </TouchableOpacity>
       {postIsUploading ? (
         <Progress.Bar
+          style={{ position: "absolute", bottom: 0 }}
           indeterminate
           width={Dimensions.get("window").width}
           color={colors.text}
@@ -263,20 +290,19 @@ const ProfileScreen = (props) => {
           height={2}
         />
       ) : null}
-    </SafeAreaView>
+    </>
   );
 };
 
 const makeStyles = (colors: any, theme) =>
   StyleSheet.create({
+    aboutMe: {},
     centeredView: {
       flex: 1,
       justifyContent: "flex-end",
       alignItems: "center",
     },
-    containerSafeArea: {
-      flex: 1,
-    },
+    containerSafeArea: {},
     settingButton: {
       position: "absolute",
       top: Platform.OS === "android" ? 30 : "10%",
@@ -290,8 +316,8 @@ const makeStyles = (colors: any, theme) =>
       alignItems: "center",
       bottom: 20,
       right: 20,
-      backgroundColor: "rgba(180,180,180,0.7)",
-      shadowOpacity: 1,
+      backgroundColor: theme.dark ? "rgba(180,180,180,0.7)" : "lightgrey",
+      shadowOpacity: 0.5,
       shadowOffset: {
         height: 2,
         width: 0,
@@ -299,20 +325,20 @@ const makeStyles = (colors: any, theme) =>
       borderRadius: 30,
     },
     usernameContainer: {
-      marginTop: actuatedNormalize(15),
-      marginBottom: actuatedNormalize(10),
-      width: Dimensions.get("window").width,
+      flexDirection: "row",
       alignItems: "center",
-      justifyContent: "center",
+      justifyContent: "space-between",
+      height: "20%",
+      marginBottom: 10,
     },
     username: {
       color: colors.text,
       fontSize: 20,
+      fontFamily: "Lato-Bold",
     },
     emailContainer: {
       marginBottom: 15,
-      width: Dimensions.get("window").width,
-      alignItems: "center",
+      width: Dimensions.get("window").width / 2,
       justifyContent: "center",
     },
     email: {
@@ -332,6 +358,7 @@ const makeStyles = (colors: any, theme) =>
     textStyle: {
       color: colors.text,
       fontFamily: "WorkSans-Bold",
+      marginHorizontal: 10,
     },
     image: {
       width: "100%",
@@ -340,22 +367,27 @@ const makeStyles = (colors: any, theme) =>
     imageContainer: {
       height: actuatedNormalize(120),
       width: actuatedNormalize(120),
+      backgroundColor: "white",
       borderRadius: 100,
-      marginTop: "20%",
       overflow: "hidden",
       borderColor: theme.dark ? "white" : "black",
       borderWidth: 2,
     },
     profileInfoContainer: {
       width: "100%",
-      alignItems: "center",
+      height:
+        Platform.OS === "android"
+          ? Dimensions.get("screen").height / 1.5
+          : Dimensions.get("screen").height / 2,
     },
     dotStyle: {
       width: 7,
       height: 7,
       borderRadius: 5,
       marginHorizontal: 5,
-      backgroundColor: "rgba(128, 128, 128, 0.92)",
+      backgroundColor: theme.dark
+        ? "rgba(128, 128, 128, 0.92)"
+        : colors.primary,
       shadowOpacity: 0.4,
       shadowOffset: {
         height: 2,
@@ -415,6 +447,7 @@ const makeStyles = (colors: any, theme) =>
       backgroundColor: colors.background,
       borderWidth: 2,
       borderColor: theme.dark ? "white" : "black",
+      flexDirection: "row",
     },
   });
 const mapDispatchProps = (dispatch) => {
@@ -425,6 +458,7 @@ const mapDispatchProps = (dispatch) => {
 };
 const mapStateToProps = (store) => ({
   currentUser: store.userState.currentUser,
+
   posts: store.userState.posts,
   postIsUploading: store.postIsUploading.isLoading,
   following: store.userState.following,

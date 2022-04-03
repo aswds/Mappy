@@ -4,14 +4,15 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import BackButton from "../../components/appNavigatorComponents/BackButton";
 import { actuatedNormalize } from "../../components/actuaterNormalize";
 import ImageBrowserScreen from "../../screens/Post/ImageBrowserScreen";
-import { useNavigation, useTheme } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native";
 import { Entypo, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { HeaderBackButton } from "@react-navigation/elements";
+import { useTheme } from "../../Theme/ThemeProvider";
 const MyPostStack = createNativeStackNavigator();
 export const PostCreatingNavigator = (props) => {
-  const { colors } = useTheme();
-  const theme = useTheme();
+  const { theme } = useTheme();
+  const colors = theme.colors;
   const navigation = useNavigation();
   return (
     <MyPostStack.Navigator

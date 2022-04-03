@@ -35,14 +35,17 @@ import * as Haptics from "expo-haptics";
 import * as Progress from "react-native-progress";
 import firebase from "firebase";
 import { Asset } from "expo-asset";
-import { SliderBox } from "react-native-image-slider-box";
 import { Image as CachedImage } from "react-native-expo-image-cache";
 import { Skeleton } from "moti/skeleton";
 import { onFollow, onUnFollow } from "../../components/follow";
-import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { noPostStyles } from "../../styles/noPostStyles";
+import { useTheme } from "../../Theme/ThemeProvider";
+import { RenderPosts } from "../../components/ProfileFunc/RenderPost";
 const UserPage = (props) => {
-  const theme = useTheme();
+  const { theme } = useTheme();
+  const colors = theme.colors;
+
   const navigation = useNavigation();
   const route = useRoute();
   const { posts } = props;
@@ -60,7 +63,6 @@ const UserPage = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const currentUserUID = firebase.auth().currentUser.uid;
   const userUID = route.params?.uid;
-  const { colors } = useTheme();
   const styles = makeStyles(colors, theme);
   const onRefresh = () => {
     setRefresh(true);
@@ -162,52 +164,6 @@ const UserPage = (props) => {
       .catch((e) => Alert.alert(e));
   }
 
-  const renderPosts = (item) => {
-    return (
-      <View
-        style={{
-          width: Dimensions.get("window").width / 3,
-          justifyContent: "center",
-          aspectRatio: 1 / 1,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-        key={item.id}
-      >
-        <SliderBox
-          sliderBoxHeight={Dimensions.get("window").width / 3}
-          imageLoadingColor={"#fff"}
-          paginationBoxStyle={{
-            position: "absolute",
-            padding: 0,
-            alignItems: "center",
-            alignSelf: "center",
-            justifyContent: "center",
-          }}
-          dotColor="#fff"
-          inactiveDotColor="#333333"
-          dotStyle={{
-            width: 7,
-            height: 7,
-            borderRadius: 5,
-            marginHorizontal: 5,
-            backgroundColor: "rgba(128, 128, 128, 0.92)",
-            shadowOpacity: 0.4,
-            shadowOffset: {
-              height: 2,
-              width: 0,
-            },
-          }}
-          images={item.downloadURLs}
-          ImageComponentStyle={{
-            width: Dimensions.get("window").width / 3,
-          }}
-          parentWidth={Dimensions.get("window").width / 3}
-        />
-      </View>
-    );
-  };
-
   return (
     <SafeAreaView style={styles.containerSafeArea}>
       <StatusBar barStyle="light-content" />
@@ -244,57 +200,65 @@ const UserPage = (props) => {
           style={{
             paddingTop: "15%",
             borderBottomWidth: 0,
-            height: "50%",
+            height:
+              Platform.OS === "android"
+                ? Dimensions.get("screen").height / 1.5
+                : Dimensions.get("screen").height / 2,
           }}
         >
           <View
             style={{
-              height: actuatedNormalize(120),
-              width: actuatedNormalize(120),
-              borderRadius: 100,
-              marginTop: "5%",
-              overflow: "hidden",
-              borderColor: "white",
-              borderWidth: 2,
-              alignSelf: "center",
-            }}
-          >
-            {user.userImage ? (
-              <CachedImage
-                uri={user.userImage}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                }}
-                key={image}
-              />
-            ) : (
-              <Image
-                source={require("../../src/image/logoAuth.png")}
-                style={{ width: "100%", height: "100%" }}
-              />
-            )}
-          </View>
-          <View
-            style={{
-              marginTop: actuatedNormalize(15),
-              marginBottom: actuatedNormalize(10),
-              width: Dimensions.get("window").width,
+              width: "100%",
+              flexDirection: "row",
               alignItems: "center",
-              justifyContent: "center",
+              paddingLeft: "5%",
             }}
           >
-            <Text style={styles.username}>`{user.username}</Text>
+            <View style={styles.imageContainer}>
+              {!user.userImage ? (
+                <Image
+                  source={
+                    image
+                      ? { uri: image }
+                      : require("../../src/image/logoAuth.png")
+                  }
+                  style={styles.image}
+                />
+              ) : (
+                <CachedImage
+                  uri={image}
+                  defaultSource={{ uri: user.userImage }}
+                  style={styles.image}
+                />
+              )}
+            </View>
+
+            <View style={{ justifyContent: "center", paddingLeft: 15 }}>
+              <View style={styles.usernameContainer}>
+                <Text style={styles.username}>`{user.username}</Text>
+                {/* <TouchableOpacity
+                  style={styles.settingButton}
+                  onPress={() => {
+                    navigation.push("Settings");
+                  }}
+                >
+                  <AntDesign name="setting" size={30} color={colors.text} />
+                </TouchableOpacity> */}
+              </View>
+              <View style={styles.emailContainer}>
+                <Text style={styles.email}>USA, Texas</Text>
+              </View>
+              <View>
+                <Text style={{ fontFamily: "Lato-Regular", color: "grey" }}>
+                  Have visited 6 countries
+                </Text>
+              </View>
+            </View>
           </View>
-          <View
-            style={{
-              marginBottom: 20,
-              width: Dimensions.get("window").width,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Text style={styles.email}>{user.email}</Text>
+          <View style={{ marginHorizontal: "5%", marginVertical: 20 }}>
+            <Text style={{ color: colors.text }}>
+              Nigga Nigga Nigga Nigga Nigga Nigga Nigga Nigga Nigga
+            </Text>
           </View>
           <View style={styles.followContainer}>
             <TouchableOpacity
@@ -395,23 +359,26 @@ const UserPage = (props) => {
               text={"Message"}
             />
           </View>
-          {userPosts ? (
-            <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-              {userPosts.map((item) => renderPosts(item))}
-            </View>
-          ) : (
-            <View style={noPostStyles.noPostContainer}>
-              <MaterialCommunityIcons
-                name="post"
-                size={150}
-                color={colors.text}
-              />
-              <Text style={[noPostStyles.noPostText, { color: colors.text }]}>
-                no posts yet
-              </Text>
-            </View>
-          )}
         </View>
+
+        {userPosts ? (
+          <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+            {userPosts.map((item) => {
+              return <RenderPosts item={item} key={item.id} />;
+            })}
+          </View>
+        ) : (
+          <View style={noPostStyles.noPostContainer}>
+            <MaterialCommunityIcons
+              name="post"
+              size={150}
+              color={colors.text}
+            />
+            <Text style={[noPostStyles.noPostText, { color: colors.text }]}>
+              no posts yet
+            </Text>
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -455,6 +422,37 @@ const makeStyles = (colors: any, theme) =>
       flexDirection: "row",
       justifyContent: "space-evenly",
       marginVertical: actuatedNormalize(15),
+    },
+    image: {
+      width: "100%",
+      height: "100%",
+    },
+    imageContainer: {
+      height: actuatedNormalize(120),
+      width: actuatedNormalize(120),
+      backgroundColor: "white",
+      borderRadius: 100,
+      overflow: "hidden",
+      borderColor: theme.dark ? "white" : "black",
+      borderWidth: 2,
+    },
+    usernameContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      height: "20%",
+      marginBottom: 10,
+    },
+    emailContainer: {
+      marginBottom: 15,
+      width: Dimensions.get("window").width / 2,
+      justifyContent: "center",
+    },
+    email: {
+      fontFamily: "Lato-Regular",
+      fontSize: 15,
+      fontWeight: "400",
+      color: theme.dark ? "grey" : colors.tabColor,
     },
   });
 

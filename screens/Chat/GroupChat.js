@@ -16,7 +16,7 @@ import { fetchUser } from "../../redux/actions";
 import { SearchBar } from "react-native-elements";
 import { AntDesign, MaterialIcons, FontAwesome } from "@expo/vector-icons";
 import { actuatedNormalize } from "../../components/actuaterNormalize";
-import { useNavigation, useTheme } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import {
   Container,
   Card,
@@ -29,6 +29,7 @@ import {
   MessageText,
   TextSection,
 } from "../../styles/ChatStyle";
+import { useTheme } from "../../Theme/ThemeProvider";
 import { MessageCard } from "./MessageCard";
 const Messages = [
   {
@@ -75,7 +76,8 @@ const Messages = [
 const GroupMessages = (props) => {
   const [search, setSearch] = useState();
   const [input, setInput] = useState();
-  const { colors } = useTheme();
+  const { theme } = useTheme();
+  const colors = theme.colors;
   const navigation = useNavigation();
   const styles = makeStyles(colors);
   return (

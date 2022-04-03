@@ -13,7 +13,11 @@ export default {
     updates: {
       fallbackToCacheTimeout: 0,
     },
-    assetBundlePatterns: ["./src/image/backgound.png", "./src/image/Logo.png"],
+    assetBundlePatterns: [
+      "./src/image/backgound.png",
+      "./src/image/Logo.png",
+      "./src/image/logoAuth.png",
+    ],
     ios: {
       supportsTablet: true,
     },

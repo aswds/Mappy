@@ -2,13 +2,15 @@ import { UserTopTabFollow } from "../UserTopTabFollow/UserTopTabFollow";
 import UserPage from "../../screens/Search/UserPage";
 import SearchScreen from "../../screens/Search/SearchScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { useTheme } from "../../Theme/ThemeProvider";
 const SearchNav = createNativeStackNavigator();
 export const SearchNavigator = () => {
   const route = useRoute();
-  const { colors } = useTheme();
+  const { theme } = useTheme();
+  const colors = theme.colors;
   const navigation = useNavigation();
-  const theme = useTheme();
+
   return (
     <SearchNav.Navigator screenOptions={{ headerShown: false }}>
       <SearchNav.Group>

@@ -26,9 +26,11 @@ import { Image as CachedImage } from "react-native-expo-image-cache";
 import { Skeleton } from "moti/skeleton";
 import RenderItem from "./RenderItem";
 import { fetchUserFollowing } from "./fetchUserFollowing";
-import { useRoute, useTheme } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
+import { useTheme } from "../../Theme/ThemeProvider";
 const UserFollowing = (props) => {
-  const { colors } = useTheme();
+  const { theme } = useTheme();
+  const colors = theme.colors;
   const [textInput, setTextInput] = useState("");
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);

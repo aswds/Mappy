@@ -4,7 +4,7 @@ export const theme = {
     border: "rgb(216, 216, 216)",
     card: "rgb(255, 255, 255)",
     notification: "rgb(255, 59, 48)",
-    primary: "rgb(10, 132, 255)",
+    primary: "rgb(88, 77, 240)",
     text: "rgb(28, 28, 30)",
     tabColor: "rgb(40,40,40)",
     greyText: "grey",

@@ -18,16 +18,16 @@ import { TicketStack } from "../TicketNavigator/TicketsStack";
 import {
   useNavigation,
   getFocusedRouteNameFromRoute,
-  useTheme,
 } from "@react-navigation/native";
 import Settings from "../../screens/settings/Settings";
+import { useTheme } from "../../Theme/ThemeProvider";
 const bottomIconSize = 8;
 const DrawerNav = createDrawerNavigator();
 
 export const DrawerNavigator = (props) => {
   const navigation = useNavigation();
-  const { colors } = useTheme();
-  const theme = useTheme();
+  const { theme } = useTheme();
+  const colors = theme.colors;
   return (
     <DrawerNav.Navigator
       screenOptions={{

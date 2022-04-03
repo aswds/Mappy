@@ -21,8 +21,8 @@ import { fetchUser } from "../../redux/actions";
 import { SearchBar } from "react-native-elements";
 import { AntDesign, MaterialIcons, FontAwesome } from "@expo/vector-icons";
 import { actuatedNormalize } from "../../components/actuaterNormalize";
-import { useTheme } from "@react-navigation/native";
 import { useHeaderHeight } from "@react-navigation/elements";
+import { useTheme } from "../../Theme/ThemeProvider";
 const content = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const Messages = [
   {
@@ -69,7 +69,8 @@ const Messages = [
 const Chat = (props) => {
   const [search, setSearch] = useState();
   const [input, setInput] = useState();
-  const { colors } = useTheme();
+  const { theme } = useTheme();
+  const colors = theme.colors;
   const headerHeight = useHeaderHeight();
   return (
     <SafeAreaView style={styles.container}>

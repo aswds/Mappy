@@ -25,12 +25,12 @@ import { Keyboard } from "react-native";
 import { Image as CachedImage } from "react-native-expo-image-cache";
 import RenderItem from "./RenderItem";
 import { fetchUserFollowers } from "./fetchUserFollowers";
-import { useRoute, useTheme } from "@react-navigation/native";
-
+import { useRoute } from "@react-navigation/native";
+import { useTheme } from "../../Theme/ThemeProvider";
 const UserFollowers = (props) => {
   const route = useRoute();
-  const { colors } = useTheme();
-  const theme = useTheme();
+  const { theme } = useTheme();
+  const colors = theme.colors;
   const userUID = route.params?.userUID;
   const [textInput, setTextInput] = useState("");
   const [index, setIndex] = React.useState(0);

@@ -15,13 +15,15 @@ import { SearchNavigator } from "../SearchNavigator/SearchNavigator";
 import HomeScreen from "../../screens/Home/HomeScreen";
 import { NotificationNavigator } from "../Notification/NotificationNavigator";
 import NotificationScreen from "../../screens/Chat/NotificationScreen";
+useTheme;
 import ChatButton from "../../components/notificationNav/headerRightChat";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "../../Theme/ThemeProvider";
 const bottomIconSize = 8;
 const BottomTab = createBottomTabNavigator();
 export const BottomAppNavigator = (props) => {
-  const { colors } = useTheme();
-  const theme = useTheme();
+  const { theme } = useTheme();
+
+  const colors = theme.colors;
   return (
     <BottomTab.Navigator
       screenOptions={{

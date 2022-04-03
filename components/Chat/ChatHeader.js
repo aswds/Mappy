@@ -9,14 +9,15 @@ import {
 } from "react-native";
 import { getHeaderTitle, HeaderBackButton } from "@react-navigation/elements";
 import { Header } from "react-native-elements";
-import { useNavigation, useTheme } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { CenterHeaderComponent } from "./CenterHeaderComp";
 import { actuatedNormalize } from "../actuaterNormalize";
 import { RightComponent } from "./RightComponent";
+import { useTheme } from "../../Theme/ThemeProvider";
 export const ChatHeader = (props) => {
   const title = getHeaderTitle(props.options, props.route.name);
-  const { colors } = useTheme();
-  const theme = useTheme();
+  const { theme } = useTheme();
+  const colors = theme.colors;
   const navigation = useNavigation();
   return (
     // <View

@@ -7,7 +7,7 @@ const saveMediaToStorage = async (media) => {
     firebase.auth().currentUser.uid
   }/${Math.random().toString(36)}`;
   let uri = media.uri;
-  if (media.mediaType) {
+  if (media.mediaType === "video") {
     let myAssetId = await uri.slice(5);
     let returnedAssetInfo = await MediaLibrary.getAssetInfoAsync(myAssetId);
     uri = returnedAssetInfo.localUri;

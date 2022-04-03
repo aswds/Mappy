@@ -7,5 +7,5 @@ export const uploadMultMedia = async (media, location, caption) => {
   const downloadURLs = await Promise.all(
     media.map((p) => saveMediaToStorage(p))
   );
-  await addingPost(downloadURLs, location, caption);
+  addingPost(downloadURLs, location, caption);
 };

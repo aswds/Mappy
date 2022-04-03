@@ -35,6 +35,7 @@ const iconBorderRadius = 10;
 const PostCreatingScreen = (props) => {
   const navigation = useNavigation();
   const route = useRoute();
+  const dispatch = useDispatch();
   const { colors } = useTheme();
   const theme = useTheme();
   const [media, setMedia] = useState(null);
@@ -42,15 +43,11 @@ const PostCreatingScreen = (props) => {
   const styles = makeStyles(colors);
   useEffect(() => {
     if (route.params?.photos) {
-      const photosParam = route.params?.photos;
-      if (photosParam) {
-        setMedia(photosParam);
-      }
+      setMedia(route.params?.photos);
       delete route.params?.photos;
     }
   }, [route.params?.photos]);
 
-  const dispatch = useDispatch();
   const locationData = route.params?.location;
 
   const renderImage = (item, i) => {

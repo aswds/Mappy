@@ -8,13 +8,14 @@ import {
   SafeAreaView,
 } from "react-native";
 import { getHeaderTitle } from "@react-navigation/elements";
-import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { actuatedNormalize } from "../actuaterNormalize";
 import { FontAwesome } from "@expo/vector-icons";
+import { useTheme } from "../../Theme/ThemeProvider";
 export const CenterHeaderComponent = (props) => {
   const title = getHeaderTitle(props.options, props.route.name);
-  const { colors } = useTheme();
-  const theme = useTheme();
+  const { theme } = useTheme();
+  const colors = theme.colors;
   const navigation = useNavigation();
   const styles = makeStyles(colors, theme);
   const route = useRoute();

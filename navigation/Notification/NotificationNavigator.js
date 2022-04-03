@@ -7,7 +7,8 @@ import BackButton from "../../components/appNavigatorComponents/BackButton";
 import { useNavigation, useTheme } from "@react-navigation/native";
 const Stack = createNativeStackNavigator();
 export const NotificationNavigator = (props) => {
-  const { colors } = useTheme();
+  const { theme } = useTheme();
+  const colors = theme.colors;
   const navigation = useNavigation();
   return (
     <Stack.Navigator>

@@ -17,6 +17,8 @@ import {
   KeyboardAvoidingView,
   Modal,
   Alert,
+  StatusBar,
+  ImageBackground,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Entypo, Feather, Fontisto } from "@expo/vector-icons";
@@ -31,6 +33,9 @@ import updateProfile from "../../components/ProfileFunc/updateProfile";
 import firebase from "firebase";
 import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
 import { ModalPhoto } from "./Modal";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { BlurView } from "expo-blur";
+import { useHeaderHeight } from "@react-navigation/elements";
 const EditProfile = (props) => {
   const navigation = useNavigation();
   const { colors } = useTheme();
@@ -136,181 +141,209 @@ const EditProfile = (props) => {
   const [name, setName] = useState(userName);
   const [secondName, setSecondName] = useState();
   const styles = makeStyles(colors, theme);
+  const insets = useSafeAreaInsets();
   return (
-    <SafeAreaView style={styles.safeAreaViewContainer}>
-      <ScrollView
-        style={{ backgroundColor: colors.background, flex: 1 }}
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={{ flex: 1, marginVertical: 20 }}>
-          <TouchableOpacity
+    <ScrollView
+      style={{
+        backgroundColor: colors.background,
+        flex: 1,
+      }}
+      contentContainerStyle={{
+        paddingBottom: Platform.OS === "android" ? 50 : 0,
+      }}
+      showsVerticalScrollIndicator={false}
+    >
+      <StatusBar barStyle={theme.dark ? "light-content" : "dark-content"} />
+      <View style={{ flex: 1 }}>
+        <ImageBackground
+          source={
+            image ? { uri: image } : require("../../src/image/logoAuth.png")
+          }
+          imageStyle={{
+            justifyContent: "center",
+            width: "100%",
+            height: "100%",
+          }}
+          style={{
+            width: "100%",
+            height: "30%",
+          }}
+        >
+          <BlurView
+            intensity={Platform.OS === "android" ? 200 : 25}
             style={{
-              ...styles.pictureContainer,
-              alignSelf: "center",
-            }}
-            onPress={() => {
-              showModalHandle();
+              height: "100%",
+              width: "100%",
+              justifyContent: "center",
+              paddingVertical: insets.top,
             }}
           >
-            <View style={{ flex: 1 }}>
-              <Image
-                style={{
-                  height: "100%",
-                  width: "100%",
-                  backgroundColor: "white",
+            <TouchableOpacity
+              style={{
+                marginTop: insets.top,
+                ...styles.pictureContainer,
+                alignSelf: "center",
+              }}
+              onPress={() => {
+                showModalHandle();
+              }}
+            >
+              <View style={{ flex: 1 }}>
+                <Image
+                  style={{
+                    height: "100%",
+                    width: "100%",
+                    backgroundColor: "white",
+                  }}
+                  source={
+                    image
+                      ? { uri: image }
+                      : require("../../src/image/logoAuth.png")
+                  }
+                />
+              </View>
+            </TouchableOpacity>
+            <View style={{ ...styles.usernameField }}>
+              <View style={styles.userInputContainer}>
+                <Feather name="user" size={24} color={iconColorAndUserInput} />
+              </View>
+              <TextInput
+                placeholder="Username"
+                style={styles.textInputStyle}
+                placeholderTextColor={placeholderColor}
+                onChangeText={(text) => {
+                  freeUsername(text);
+                  setUsername(text);
                 }}
-                source={
-                  image
-                    ? { uri: image }
-                    : require("../../src/image/defaultProfileImage2.png")
-                }
+                defaultValue={username}
               />
             </View>
-          </TouchableOpacity>
-          <View style={{ ...styles.inputField }}>
-            <View style={{ justifyContent: "center", marginHorizontal: 10 }}>
-              <Text style={{ color: colors.text }}>Your name: </Text>
-            </View>
-            <TextInput
-              placeholder="Name"
-              style={styles.textInputStyle}
-              placeholderTextColor={placeholderColor}
-              onChangeText={(text) => {
-                setName(text);
-              }}
-              defaultValue={name}
-            />
+          </BlurView>
+        </ImageBackground>
+        <View style={{ ...styles.inputField }}>
+          <View style={{ justifyContent: "center", marginHorizontal: 10 }}>
+            <Text style={{ color: colors.text }}>Your name: </Text>
           </View>
-          <View style={{ ...styles.inputField }}>
-            <View style={{ justifyContent: "center", marginHorizontal: 10 }}>
-              <Text style={{ color: colors.text }}>Your second name: </Text>
-            </View>
-            <TextInput
-              placeholder="Second name"
-              style={styles.textInputStyle}
-              placeholderTextColor={placeholderColor}
-              onChangeText={(text) => {
-                setSecondName(text);
-              }}
-              defaultValue={secondName}
-            />
-          </View>
-          <View style={{ ...styles.inputField }}>
-            <View style={styles.userInputContainer}>
-              <Feather name="user" size={24} color={iconColorAndUserInput} />
-            </View>
-            <TextInput
-              placeholder="Username"
-              style={styles.textInputStyle}
-              placeholderTextColor={placeholderColor}
-              onChangeText={(text) => {
-                freeUsername(text);
-                setUsername(text);
-              }}
-              defaultValue={username}
-            />
-          </View>
-
-          <View style={styles.inputField}>
-            <View style={styles.userInputContainer}>
-              <Entypo name="phone" size={24} color={iconColorAndUserInput} />
-            </View>
-            <TextInput
-              keyboardType="phone-pad"
-              placeholder="Phone number"
-              placeholderTextColor={placeholderColor}
-              style={styles.textInputStyle}
-              onChangeText={(text) => {
-                setPhoneNumber(text);
-              }}
-              defaultValue={phoneNumber}
-            />
-          </View>
-          <View style={styles.inputField}>
-            <View style={styles.userInputContainer}>
-              <MaterialIcons
-                name="alternate-email"
-                size={24}
-                color={iconColorAndUserInput}
-              />
-            </View>
-            <TextInput
-              placeholder="Gmail"
-              placeholderTextColor={placeholderColor}
-              style={styles.textInputStyle}
-              onChangeText={(text) => {
-                setGamil(text);
-              }}
-              defaultValue={gmail}
-            />
-          </View>
-          <View style={styles.inputField}>
-            <View style={styles.userInputContainer}>
-              <Fontisto
-                name="world-o"
-                size={24}
-                color={iconColorAndUserInput}
-              />
-            </View>
-            <TextInput
-              placeholder="Country"
-              placeholderTextColor={placeholderColor}
-              style={styles.textInputStyle}
-              onChangeText={(text) => {
-                setCountry(text);
-              }}
-              defaultValue={country}
-            />
-          </View>
-          <View style={styles.inputField}>
-            <View style={styles.userInputContainer}>
-              <Entypo
-                name="location-pin"
-                size={24}
-                color={iconColorAndUserInput}
-              />
-            </View>
-            <TextInput
-              placeholder="City"
-              placeholderTextColor={placeholderColor}
-              style={styles.textInputStyle}
-              onChangeText={(text) => {
-                setCity(text);
-              }}
-              defaultValue={city}
-            />
-          </View>
-
-          <View style={styles.whiteButtonContainer}>
-            <View>
-              <WhiteButton
-                style={{ width: 80 }}
-                onPress={() => {
-                  navigation.goBack();
-                }}
-                text="Cancle"
-              />
-            </View>
-            <View>
-              <WhiteButton
-                style={{ width: 80 }}
-                onPress={() => {
-                  navigation.navigate("ProfileScreen", {
-                    imageURI: image,
-                  });
-                }}
-                text="Save"
-              />
-            </View>
-          </View>
-          <ModalPhoto
-            hideModal={hideModal}
-            showModal={showModal}
-            imageHandler={imagePropHandler}
+          <TextInput
+            placeholder="Name"
+            style={styles.textInputStyle}
+            placeholderTextColor={placeholderColor}
+            onChangeText={(text) => {
+              setName(text);
+            }}
+            defaultValue={name}
           />
         </View>
-      </ScrollView>
-    </SafeAreaView>
+        <View style={{ ...styles.inputField }}>
+          <View style={{ justifyContent: "center", marginHorizontal: 10 }}>
+            <Text style={{ color: colors.text }}>Your second name: </Text>
+          </View>
+          <TextInput
+            placeholder="Second name"
+            style={styles.textInputStyle}
+            placeholderTextColor={placeholderColor}
+            onChangeText={(text) => {
+              setSecondName(text);
+            }}
+            defaultValue={secondName}
+          />
+        </View>
+
+        <View style={styles.inputField}>
+          <View style={styles.userInputContainer}>
+            <Entypo name="phone" size={24} color={iconColorAndUserInput} />
+          </View>
+          <TextInput
+            keyboardType="phone-pad"
+            placeholder="Phone number"
+            placeholderTextColor={placeholderColor}
+            style={styles.textInputStyle}
+            onChangeText={(text) => {
+              setPhoneNumber(text);
+            }}
+            defaultValue={phoneNumber}
+          />
+        </View>
+        <View style={styles.inputField}>
+          <View style={styles.userInputContainer}>
+            <MaterialIcons
+              name="alternate-email"
+              size={24}
+              color={iconColorAndUserInput}
+            />
+          </View>
+          <TextInput
+            placeholder="Gmail"
+            placeholderTextColor={placeholderColor}
+            style={styles.textInputStyle}
+            onChangeText={(text) => {
+              setGamil(text);
+            }}
+            defaultValue={gmail}
+          />
+        </View>
+        <View style={styles.inputField}>
+          <View style={styles.userInputContainer}>
+            <Fontisto name="world-o" size={24} color={iconColorAndUserInput} />
+          </View>
+          <TextInput
+            placeholder="Country"
+            placeholderTextColor={placeholderColor}
+            style={styles.textInputStyle}
+            onChangeText={(text) => {
+              setCountry(text);
+            }}
+            defaultValue={country}
+          />
+        </View>
+        <View style={styles.inputField}>
+          <View style={styles.userInputContainer}>
+            <Entypo
+              name="location-pin"
+              size={24}
+              color={iconColorAndUserInput}
+            />
+          </View>
+          <TextInput
+            placeholder="City"
+            placeholderTextColor={placeholderColor}
+            style={styles.textInputStyle}
+            onChangeText={(text) => {
+              setCity(text);
+            }}
+            defaultValue={city}
+          />
+        </View>
+
+        <View style={styles.whiteButtonContainer}>
+          <View>
+            <WhiteButton
+              style={{ width: 80 }}
+              onPress={() => {
+                navigation.goBack();
+              }}
+              text="Cancle"
+            />
+          </View>
+          <View>
+            <WhiteButton
+              style={{ width: 80 }}
+              onPress={() => {
+                navigation.navigate("ProfileScreen", {
+                  imageURI: image,
+                });
+              }}
+              text="Save"
+            />
+          </View>
+        </View>
+        <ModalPhoto
+          hideModal={hideModal}
+          showModal={showModal}
+          imageHandler={imagePropHandler}
+        />
+      </View>
+    </ScrollView>
   );
 };
 
@@ -351,11 +384,20 @@ const makeStyles = (colors: any, theme) =>
     pictureContainer: {
       height: Dimensions.get("screen").height >= 800 ? 150 : 130,
       width: Dimensions.get("screen").height >= 800 ? 150 : 130,
-      borderRadius: 40,
+      borderRadius: 100,
       overflow: "hidden",
       borderWidth: 3,
       borderColor: colors.border,
       margin: 10,
+    },
+    usernameField: {
+      flexDirection: "row",
+      backgroundColor: "rgba(100,100,100,0.5)",
+      borderRadius: 15,
+      marginTop: "1%",
+      width: "60%",
+      alignSelf: "center",
+      borderColor: theme.dark ? "#a3a3a3" : colors.border,
     },
     inputField: {
       flexDirection: "row",
@@ -400,6 +442,7 @@ const makeStyles = (colors: any, theme) =>
       justifyContent: "center",
       flexDirection: "row",
       marginVertical: 20,
+      backgroundColor: "green",
     },
     modalButtonsStyle: {
       height: 130,

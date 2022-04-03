@@ -14,6 +14,7 @@ import {
   TouchableOpacity,
   Switch,
   Platform,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { Drawer } from "react-native-paper";
 import { Entypo } from "@expo/vector-icons";
@@ -27,26 +28,26 @@ import { bindActionCreators } from "redux";
 import { fetchUser } from "../redux/actions";
 import { connect, useSelector } from "react-redux";
 import { actuatedNormalize } from "./actuaterNormalize";
-import { DarkTheme, DefaultTheme, useTheme } from "@react-navigation/native";
+import { DarkTheme } from "@react-navigation/native";
 import { EventRegister } from "react-native-event-listeners";
 import { useDispatch } from "react-redux";
 import { switchTheme } from "../redux/actions";
 import { theme as AppTheme } from "./theme";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTheme } from "../Theme/ThemeProvider";
 const CustomDrawerItems = (props) => {
-  const themeIsDark = useSelector((state) => state.themeState.theme.dark);
+  const { theme, updateTheme } = useTheme();
+  const colors = theme.colors;
   const dispatch = useDispatch();
-  const [isDark, setIsDark] = useState(themeIsDark);
-  const toggleSwitch = () => {
-    setIsDark((isDark) => !isDark);
+  const [isDark, setIsDark] = useState(theme.dark);
+  const toggleSwitch = async () => {
     if (isDark) {
-      dispatch(switchTheme(AppTheme));
+      await updateTheme(AppTheme);
     } else {
-      dispatch(switchTheme(DarkTheme));
+      await updateTheme(DarkTheme);
     }
+    setIsDark((isDark) => !isDark);
   };
-  const { colors } = useTheme();
-  const theme = useTheme();
   useEffect(() => {
     props.fetchUser();
   }, [props.navigation]);
@@ -106,7 +107,12 @@ const CustomDrawerItems = (props) => {
               }}
             >
               <Text
-                style={{ fontSize: 15, fontWeight: "700", color: colors.text }}
+                style={{
+                  fontSize: 15,
+                  fontWeight: "700",
+                  color: colors.text,
+                  marginHorizontal: "5%",
+                }}
               >
                 `{props.currentUser.username}
               </Text>
@@ -122,14 +128,16 @@ const CustomDrawerItems = (props) => {
               </Text>
             </View>
             <View style={{ height: "50%" }}>
-              <View style={styles.switchContainer}>
+              <TouchableOpacity
+                style={styles.switchContainer}
+                onPress={() => {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+                  toggleSwitch();
+                }}
+              >
                 <Text
                   style={{ fontFamily: "Poppins-Regular", color: colors.text }}
-                  onPress={() => {
-                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-                    toggleSwitch();
-                  }}
                 >
                   Dark theme
                 </Text>
@@ -140,7 +148,7 @@ const CustomDrawerItems = (props) => {
                   onValueChange={toggleSwitch}
                   value={isDark}
                 />
-              </View>
+              </TouchableOpacity>
             </View>
           </View>
         </SafeAreaView>

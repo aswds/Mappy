@@ -25,9 +25,10 @@ import { Keyboard } from "react-native";
 import { Image as CachedImage } from "react-native-expo-image-cache";
 import RenderItem from "./RenderItem";
 import { fetchUserFollowers } from "./fetchUserFollowers";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "../../Theme/ThemeProvider";
 const Followers = (props) => {
-  const { colors } = useTheme();
+  const { theme } = useTheme();
+  const colors = theme.colors;
   const [textInput, setTextInput] = useState("");
   const [index, setIndex] = React.useState(0);
 

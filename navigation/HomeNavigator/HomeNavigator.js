@@ -2,13 +2,13 @@ import HomeScreen from "../../screens/Home/HomeScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { DrawerActions, useTheme } from "@react-navigation/native";
+import { DrawerActions } from "@react-navigation/native";
 import { actuatedNormalize } from "../../components/actuaterNormalize";
 const HomeStack = createNativeStackNavigator();
-
+import { useTheme } from "../../Theme/ThemeProvider";
 export const HomeNavigator = ({ navigation }) => {
-  const { colors } = useTheme();
-  const theme = useTheme();
+  const { theme } = useTheme();
+  const colors = theme.colors;
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen

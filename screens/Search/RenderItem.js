@@ -3,12 +3,13 @@ import { View, StyleSheet, TouchableOpacity, Text, Image } from "react-native";
 import { actuatedNormalize } from "../../components/actuaterNormalize";
 import { Image as CachedImage } from "react-native-expo-image-cache";
 import firebase from "firebase";
-import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { useTheme } from "../../Theme/ThemeProvider";
 function RenderItem(props) {
   const navigation = useNavigation();
   const route = useRoute();
-  const { colors } = useTheme();
-
+  const { theme } = useTheme();
+  const colors = theme.colors;
   const currentUserUID = firebase.auth().currentUser.uid;
   const routeName = route.params?.routeName;
   const { item } = props;

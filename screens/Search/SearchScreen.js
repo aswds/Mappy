@@ -32,13 +32,14 @@ import { Image as CachedImage } from "react-native-expo-image-cache";
 import { Skeleton } from "moti/skeleton";
 import RenderItem from "./RenderItem";
 import { fetchUsers } from "./fetchUsers";
-import { useNavigation, useTheme } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "../../Theme/ThemeProvider";
 const SearchScreen = (props) => {
   const [textInput, setTextInput] = useState("");
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const { colors } = useTheme();
-  const theme = useTheme();
+  const { theme } = useTheme();
+  const colors = theme.colors;
   const navigation = useNavigation();
   useEffect(() => {
     fetchUsers(textInput).then((users) => {
@@ -98,9 +99,9 @@ const SearchScreen = (props) => {
         onClear={() => onClear()}
       />
 
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, backgroundColor: colors.background }}>
         <FlatList
-          style={{ flex: 1 }}
+          style={{ flex: 1, backgroundColor: colors.background }}
           data={filteredUsers}
           horizontal={false}
           keyExtractor={(item) => item.id}

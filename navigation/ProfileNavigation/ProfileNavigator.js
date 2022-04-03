@@ -10,19 +10,24 @@ import FollowHeader from "../../components/appNavigatorComponents/FollowHeader";
 import { useNavigation } from "@react-navigation/native";
 import UserPage from "../../screens/Profile/UserPage";
 import { UserTopTabFollow } from "../UserTopTabFollow/UserTopTabFollow";
-import { Platform } from "react-native";
+import { Platform, View, Image } from "react-native";
 import { useTheme } from "@react-navigation/native";
+import { BlurView } from "expo-blur";
 const ProfileNav = createNativeStackNavigator();
 export const ProfileNavigator = (props) => {
   const navigation = useNavigation();
   const theme = useTheme();
   const { colors } = useTheme();
   return (
-    <ProfileNav.Navigator>
+    <ProfileNav.Navigator
+      screenOptions={{ headerStyle: { backgroundColor: "transparent" } }}
+    >
       <ProfileNav.Screen
         name="ProfileScreen"
         component={ProfileScreen}
-        options={{ headerShown: false }}
+        options={{
+          headerShown: false,
+        }}
       />
       <ProfileNav.Screen
         component={UserPage}
@@ -49,11 +54,7 @@ export const ProfileNavigator = (props) => {
         name="Camera"
         options={{ headerShown: false }}
       />
-      <ProfileNav.Screen
-        component={EditProfile}
-        name="EditProfile"
-        options={{ headerShown: false }}
-      />
+
       <ProfileNav.Screen component={Settings} name="Settings" />
       <ProfileNav.Screen
         name="ImageBrowserScreen"

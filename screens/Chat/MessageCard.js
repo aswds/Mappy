@@ -8,12 +8,13 @@ import {
   Image,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import { useNavigation, useTheme } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { actuatedNormalize } from "../../components/actuaterNormalize";
+import { useTheme } from "../../Theme/ThemeProvider";
 export const MessageCard = ({ item }) => {
-  const { colors } = useTheme();
-  const theme = useTheme();
   const navigation = useNavigation();
+  const { theme } = useTheme();
+  const colors = theme.colors;
   const styles = makeStyles(colors, theme);
   return (
     <TouchableOpacity

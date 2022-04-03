@@ -18,7 +18,6 @@ import {
   DefaultTheme,
   DarkTheme,
   useNavigationContainerRef,
-  useTheme,
 } from "@react-navigation/native";
 import { useColorScheme } from "react-native";
 import PostCreatingScreen from "../screens/Post/PostCreatingScreen";
@@ -32,15 +31,22 @@ import Chat from "../screens/Chat/Chat";
 import { ChatHeader } from "../components/Chat/ChatHeader";
 import IntroSlider from "./introNav/IntroSlider";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import ThemeProvider, { useTheme } from "../Theme/ThemeProvider";
+import ThemeWrapper from "../Theme/ThemeWraper";
+import EditProfile from "../screens/Profile/EditProfile";
+
 const bottomIconSize = 8;
 const Stack = createNativeStackNavigator();
 export const AppNavigator = (props) => {
-  const { colors } = useTheme();
+  const { theme } = useTheme();
+  const colors = theme.colors;
+  const [isDark, setIsDark] = useState();
   const styles = makeStyles(colors);
   const navigation = useNavigationContainerRef();
-  const theme = useSelector((state) => state.themeState.theme);
+  const userState = useSelector((state) => state.userState.currentUser);
   return (
-    <NavigationContainer theme={theme} ref={navigation}>
+    <SafeAreaProvider>
       <Stack.Navigator
         screenOptions={{
           headerShown: false,
@@ -91,9 +97,10 @@ export const AppNavigator = (props) => {
             },
           }}
         />
+        <Stack.Screen component={EditProfile} name="EditProfile" />
         <Stack.Screen component={CameraScreen} name="CameraStack" />
       </Stack.Navigator>
-    </NavigationContainer>
+    </SafeAreaProvider>
   );
 };
 

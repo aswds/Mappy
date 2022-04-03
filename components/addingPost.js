@@ -14,11 +14,9 @@ const addingPost = (downloadURLs, location, caption) => {
       caption,
       creation: firebase.firestore.FieldValue.serverTimestamp(),
     })
-    .then((info) => {
-      console.log(info);
-    })
+
     .catch((e) => {
-      console.log(e);
+      Alert.alert(e);
     });
 };
 export default addingPost;

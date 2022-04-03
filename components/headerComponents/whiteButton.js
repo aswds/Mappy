@@ -1,7 +1,14 @@
 import React from "react";
 import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 
-const WhiteButton = ({ text, style, onPress, textStyle, buttonStyle }) => {
+const WhiteButton = ({
+  text,
+  style,
+  onPress,
+  textStyle,
+  buttonStyle,
+  icon,
+}) => {
   return (
     <View style={{ ...styles.container, ...style }}>
       <TouchableOpacity
@@ -9,6 +16,7 @@ const WhiteButton = ({ text, style, onPress, textStyle, buttonStyle }) => {
         onPress={onPress}
       >
         <Text style={{ ...styles.textStyle, ...textStyle }}>{text}</Text>
+        {icon}
       </TouchableOpacity>
     </View>
   );
