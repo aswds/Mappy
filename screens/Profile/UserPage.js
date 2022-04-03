@@ -39,14 +39,18 @@ import { SliderBox } from "react-native-image-slider-box";
 import { Image as CachedImage } from "react-native-expo-image-cache";
 import { Skeleton } from "moti/skeleton";
 import { onFollow, onUnFollow } from "../../components/follow";
-import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { noPostStyles } from "../../styles/noPostStyles";
+import { useTheme } from "../../Theme/ThemeProvider";
+import { RenderPosts } from "../../components/ProfileFunc/RenderPost";
 const UserPage = (props) => {
   const navigation = useNavigation();
   const route = useRoute();
   const { posts } = props;
-  const { colors } = useTheme();
-  const theme = useTheme();
+
+  const { theme } = useTheme();
+  const colors = theme.colors;
+
   const styles = makeStyles(colors, theme);
   const [locationPost, setLocationPost] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -396,7 +400,9 @@ const UserPage = (props) => {
 
         {userPosts ? (
           <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-            {userPosts.map((item) => renderPosts(item))}
+            {userPosts.map((item) => (
+              <RenderPosts item={item} key={item.id} />
+            ))}
           </View>
         ) : (
           <View style={noPostStyles.noPostContainer}>
