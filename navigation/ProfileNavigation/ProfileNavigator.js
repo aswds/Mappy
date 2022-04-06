@@ -13,6 +13,7 @@ import { UserTopTabFollow } from "../UserTopTabFollow/UserTopTabFollow";
 import { Platform, View, Image } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { BlurView } from "expo-blur";
+import { ProfileTab } from "./ProfileTabNav";
 const ProfileNav = createNativeStackNavigator();
 export const ProfileNavigator = (props) => {
   const navigation = useNavigation();

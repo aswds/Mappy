@@ -123,8 +123,8 @@ const EditProfile = (props) => {
   };
   const iconColorAndUserInput = colors.text;
   const placeholderColor = "#616161";
-
   const profileImage = route.params?.profileImage;
+
   const usernameDisplay = props.currentUser.username;
   const userName = props.currentUser.name;
   const gmailDisplayed = props.currentUser.email;
@@ -329,6 +329,7 @@ const EditProfile = (props) => {
             <WhiteButton
               style={{ width: 80 }}
               onPress={() => {
+                checkOnChange(phoneNumber, country, city, username, image);
                 navigation.navigate("ProfileScreen", {
                   imageURI: image,
                 });

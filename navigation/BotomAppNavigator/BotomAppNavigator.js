@@ -123,6 +123,7 @@ export const BottomAppNavigator = (props) => {
           title: "Notifications",
           headerTintColor: "white",
           headerTitleStyle: { fontSize: 18 },
+          tabBarBadge: 1,
           tabBarIcon: (tabInfo) => {
             return (
               <View style={styles.icon}>

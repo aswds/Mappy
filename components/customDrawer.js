@@ -15,6 +15,7 @@ import {
   Switch,
   Platform,
   TouchableWithoutFeedback,
+  RefreshControl,
 } from "react-native";
 import { Drawer } from "react-native-paper";
 import { Entypo } from "@expo/vector-icons";
@@ -28,7 +29,7 @@ import { bindActionCreators } from "redux";
 import { fetchUser } from "../redux/actions";
 import { connect, useSelector } from "react-redux";
 import { actuatedNormalize } from "./actuaterNormalize";
-import { DarkTheme } from "@react-navigation/native";
+import { DarkTheme, useNavigation } from "@react-navigation/native";
 import { EventRegister } from "react-native-event-listeners";
 import { useDispatch } from "react-redux";
 import { switchTheme } from "../redux/actions";
@@ -39,18 +40,12 @@ const CustomDrawerItems = (props) => {
   const { theme, updateTheme } = useTheme();
   const colors = theme.colors;
   const dispatch = useDispatch();
+  const navigation = useNavigation();
   const [isDark, setIsDark] = useState(theme.dark);
-  const toggleSwitch = async () => {
-    if (isDark) {
-      await updateTheme(AppTheme);
-    } else {
-      await updateTheme(DarkTheme);
-    }
-    setIsDark((isDark) => !isDark);
-  };
+  const [refresh, setRefresh] = useState(false);
   useEffect(() => {
     props.fetchUser();
-  }, [props.navigation]);
+  }, [refresh]);
 
   if (props.currentUser == undefined) {
     return (
@@ -65,6 +60,21 @@ const CustomDrawerItems = (props) => {
       </View>
     );
   }
+  const toggleSwitch = async () => {
+    if (isDark) {
+      await updateTheme(AppTheme);
+    } else {
+      await updateTheme(DarkTheme);
+    }
+    setIsDark((isDark) => !isDark);
+  };
+
+  const onRefresh = () => {
+    setRefresh(true);
+    setTimeout(() => {
+      setRefresh(false);
+    }, 1000);
+  };
   const image = props.currentUser.userImage;
   return (
     <View
@@ -73,7 +83,16 @@ const CustomDrawerItems = (props) => {
         backgroundColor: colors.background,
       }}
     >
-      <DrawerContentScrollView>
+      <DrawerContentScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={refresh}
+            onRefresh={onRefresh}
+            style={{ ...styles.refreshControl }}
+            tintColor={theme.dark ? "white" : "black"}
+          />
+        }
+      >
         <SafeAreaView style={{ flex: 1 }}>
           <View
             style={{

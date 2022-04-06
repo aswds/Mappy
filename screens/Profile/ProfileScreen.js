@@ -14,6 +14,7 @@ import {
   ActivityIndicator,
   FlatList,
   Image,
+  VirtualizedList,
 } from "react-native";
 import { bindActionCreators } from "redux";
 import { connect, useDispatch, useSelector } from "react-redux";
@@ -44,6 +45,8 @@ import { noPostStyles } from "../../styles/noPostStyles";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "../../Theme/ThemeProvider";
 import { RenderPosts } from "../../components/ProfileFunc/RenderPost";
+import { ProfileTab } from "../../components/ProfileFunc/ProfileTabs";
+import { About } from "./ProfileTabScreens/About";
 const ProfileScreen = (props) => {
   const { theme } = useTheme();
   const colors = theme.colors;
@@ -51,8 +54,9 @@ const ProfileScreen = (props) => {
   const [locationPost, setLocationPost] = useState(false);
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
-  const [image, setImage] = useState();
+  const [image, setImage] = useState(props.currentUser.userImage);
   const [isLoading, setIsLoading] = useState();
+  const [index, setIndex] = useState(0);
   const navigation = useNavigation();
   const route = useRoute();
   const styles = makeStyles(colors, theme);
@@ -97,12 +101,39 @@ const ProfileScreen = (props) => {
     );
   };
 
+  const RenderTab = () => {
+    if (index == 0) {
+      return posts.length > 0 ? (
+        <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+          {posts.map((item) => {
+            return <RenderPosts item={item} key={item.id} />;
+          })}
+        </View>
+      ) : (
+        <View style={noPostStyles.noPostContainer}>
+          <MaterialCommunityIcons name="post" size={150} color={colors.text} />
+          <Text style={[noPostStyles.noPostText, { color: colors.text }]}>
+            no posts yet
+          </Text>
+        </View>
+      );
+    } else if (index == 1) {
+      return (
+        <View>
+          <Text style={{ color: "white" }}>I have Visited 5 countries</Text>
+        </View>
+      );
+    } else if (index == 2) {
+      return <About />;
+    }
+  };
   const onRefresh = () => {
     setRefresh(true);
     setTimeout(() => {
       setRefresh(false);
     }, 1000);
   };
+
   const cameraImage = route.params?.imageURI ? route.params.imageURI : null;
   const insets = useSafeAreaInsets();
   return (
@@ -119,46 +150,47 @@ const ProfileScreen = (props) => {
         showsVerticalScrollIndicator={false}
         style={{ backgroundColor: colors.background }}
       >
-        <View
-          style={{
-            ...styles.profileInfoContainer,
-            marginTop: insets.top,
-          }}
-        >
+        <View style={{ flex: 1 }}>
           <View
             style={{
-              marginTop: "10%",
-              width: "100%",
-              flexDirection: "row",
-              alignItems: "center",
-              paddingLeft: "5%",
+              ...styles.profileInfoContainer,
+              marginTop: insets.top,
             }}
           >
-            <View style={styles.imageContainer}>
-              {!props.currentUser.userImage || cameraImage ? (
-                <Image
-                  source={
-                    image
-                      ? { uri: image }
-                      : require("../../src/image/logoAuth.png")
-                  }
-                  style={styles.image}
-                />
-              ) : (
-                <CachedImage
-                  uri={image}
-                  defaultSource={{ uri: props.currentUser.userImage }}
-                  style={styles.image}
-                />
-              )}
-            </View>
+            <View
+              style={{
+                marginTop: "10%",
+                width: "100%",
+                flexDirection: "row",
+                alignItems: "center",
+                paddingLeft: "5%",
+              }}
+            >
+              <View style={styles.imageContainer}>
+                {!props.currentUser.userImage || cameraImage ? (
+                  <Image
+                    source={
+                      image
+                        ? { uri: image }
+                        : require("../../src/image/logoAuth.png")
+                    }
+                    style={styles.image}
+                  />
+                ) : (
+                  <CachedImage
+                    uri={image}
+                    defaultSource={{ uri: props.currentUser.userImage }}
+                    style={styles.image}
+                  />
+                )}
+              </View>
 
-            <View style={{ justifyContent: "center", paddingLeft: 15 }}>
-              <View style={styles.usernameContainer}>
-                <Text style={styles.username}>
-                  `{props.currentUser.username}
-                </Text>
-                {/* <TouchableOpacity
+              <View style={{ justifyContent: "center", paddingLeft: 15 }}>
+                <View style={styles.usernameContainer}>
+                  <Text style={styles.username}>
+                    `{props.currentUser.username}
+                  </Text>
+                  {/* <TouchableOpacity
                   style={styles.settingButton}
                   onPress={() => {
                     navigation.push("Settings");
@@ -166,106 +198,129 @@ const ProfileScreen = (props) => {
                 >
                   <AntDesign name="setting" size={30} color={colors.text} />
                 </TouchableOpacity> */}
-              </View>
-              <View style={styles.emailContainer}>
-                <Text style={styles.email}>USA, Texas</Text>
-              </View>
-              <View>
-                <Text style={{ fontFamily: "Lato-Regular", color: "grey" }}>
-                  Have visited 6 countries
-                </Text>
+                </View>
+                <View style={styles.emailContainer}>
+                  <Text style={styles.email}>{props.currentUser.email}</Text>
+                </View>
+                <View>
+                  <Text style={{ fontFamily: "Lato-Regular", color: "grey" }}>
+                    Have visited 6 countries
+                  </Text>
+                </View>
               </View>
             </View>
-          </View>
-          <View style={{ marginHorizontal: "5%", marginVertical: 20 }}>
-            <Text style={{ color: colors.text }}>
-              Nigga Nigga Nigga Nigga Nigga Nigga Nigga Nigga Nigga
-            </Text>
-          </View>
-          <View style={styles.followContainer}>
-            <TouchableOpacity
-              style={{
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-              onPress={() => {
-                navigation.push("Follow", {
-                  username: props.currentUser.username,
-                  initialScreen: "Followers",
-                });
-              }}
-            >
-              <Text style={styles.folowText}>Followers</Text>
-
-              <Text style={styles.folowNumber}>{props.followers.length}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-              onPress={() => {
-                navigation.navigate("Follow", {
-                  username: props.currentUser.username,
-                  initialScreen: "Following",
-                });
-              }}
-            >
-              <Text style={styles.folowText}>Following</Text>
-
-              <Text style={styles.folowNumber}>
-                {props.following.length ? props.following.length : 0}
+            <View style={{ marginHorizontal: "5%", marginVertical: 20 }}>
+              <Text style={{ color: colors.text }}>
+                Nigga Nigga Nigga Nigga Nigga Nigga Nigga Nigga Nigga
               </Text>
-            </TouchableOpacity>
+            </View>
+            <View style={styles.followContainer}>
+              <TouchableOpacity
+                style={{
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                onPress={() => {
+                  navigation.push("Follow", {
+                    username: props.currentUser.username,
+                    initialScreen: "Followers",
+                  });
+                }}
+              >
+                <Text style={styles.folowText}>Followers</Text>
+
+                <Text style={styles.folowNumber}>{props.followers.length}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                onPress={() => {
+                  navigation.navigate("Follow", {
+                    username: props.currentUser.username,
+                    initialScreen: "Following",
+                  });
+                }}
+              >
+                <Text style={styles.folowText}>Following</Text>
+
+                <Text style={styles.folowNumber}>
+                  {props.following.length ? props.following.length : 0}
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.whiteButtonsContainer}>
+              <WhiteButton
+                style={styles.whiteButton}
+                text="Edit profile"
+                onPress={() => {
+                  navigation.push("EditProfile", { profileImage: image });
+                }}
+                icon={
+                  <View style={{}}>
+                    <MaterialCommunityIcons
+                      name="account-edit"
+                      size={20}
+                      color={colors.text}
+                    />
+                  </View>
+                }
+                buttonStyle={styles.buttonStyle}
+                textStyle={styles.textStyle}
+              />
+            </View>
           </View>
-          <View style={styles.whiteButtonsContainer}>
-            <WhiteButton
-              style={styles.whiteButton}
-              text="Edit profile"
-              onPress={() => {
-                navigation.push("EditProfile", { profileImage: image });
+          <View style={styles.profileTabsContainer}>
+            <ProfileTab
+              containerStyle={{
+                ...styles.profileTab,
+                borderBottomWidth: index == 0 ? 3 : 0,
               }}
-              icon={
-                <View style={{}}>
-                  <MaterialCommunityIcons
-                    name="account-edit"
-                    size={20}
-                    color={colors.text}
-                  />
-                </View>
-              }
-              buttonStyle={styles.buttonStyle}
-              textStyle={styles.textStyle}
+              text={"Posts"}
+              onPress={() => {
+                setIndex(0);
+              }}
+              textStyle={{
+                ...styles.tabTextStyle,
+                fontFamily: index == 0 ? "WorkSans-Bold" : "WorkSans-Regular",
+              }}
             />
+            <ProfileTab
+              containerStyle={{
+                ...styles.profileTab,
+                borderBottomWidth: index == 1 ? 3 : 0,
+              }}
+              text={"Flights"}
+              onPress={() => {
+                setIndex(1);
+              }}
+              textStyle={{
+                ...styles.tabTextStyle,
+                fontFamily: index == 1 ? "WorkSans-Bold" : "WorkSans-Regular",
+              }}
+            />
+            <ProfileTab
+              containerStyle={{
+                ...styles.profileTab,
+                borderBottomWidth: index == 2 ? 3 : 0,
+              }}
+              text={"About"}
+              onPress={() => {
+                setIndex(2);
+              }}
+              textStyle={{
+                ...styles.tabTextStyle,
+                fontFamily: index == 2 ? "WorkSans-Bold" : "WorkSans-Regular",
+              }}
+            />
+          </View>
+          <View style={{ flex: 1 }}>
+            <RenderTab />
           </View>
         </View>
-        {posts.length > 0 ? (
-          <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-            {posts.map((item) => (
-              <RenderPosts item={item} key={item.id} />
-            ))}
-          </View>
-        ) : (
-          <View
-            style={[
-              noPostStyles.noPostContainer,
-              {
-                justifyContent: "flex-start",
-              },
-            ]}
-          >
-            <MaterialCommunityIcons
-              name="post"
-              size={150}
-              color={theme.dark ? "white" : "black"}
-            />
-            <Text style={[noPostStyles.noPostText, { color: colors.text }]}>
-              no posts yet
-            </Text>
-          </View>
-        )}
       </ScrollView>
 
       <TouchableOpacity
@@ -297,16 +352,31 @@ const ProfileScreen = (props) => {
 const makeStyles = (colors: any, theme) =>
   StyleSheet.create({
     aboutMe: {},
-    centeredView: {
-      flex: 1,
-      justifyContent: "flex-end",
-      alignItems: "center",
-    },
-    containerSafeArea: {},
+
     settingButton: {
       position: "absolute",
       top: Platform.OS === "android" ? 30 : "10%",
       right: 20,
+    },
+    profileTab: {
+      flex: 1,
+      alignItems: "center",
+      height: "100%",
+      justifyContent: "center",
+      borderBottomColor: colors.border,
+    },
+    profileTabsContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      borderTopWidth: 1,
+      borderColor: colors.border,
+      minHeight: actuatedNormalize(50),
+      height: "5%",
+    },
+    tabTextStyle: {
+      color: colors.text,
+
+      fontSize: 15,
     },
     addingPost: {
       position: "absolute",
@@ -326,13 +396,15 @@ const makeStyles = (colors: any, theme) =>
     },
     usernameContainer: {
       flexDirection: "row",
+      flexWrap: "wrap",
       alignItems: "center",
       justifyContent: "space-between",
-      height: "20%",
       marginBottom: 10,
     },
+
     username: {
       color: colors.text,
+      flexWrap: "wrap",
       fontSize: 20,
       fontFamily: "Lato-Bold",
     },
@@ -350,7 +422,6 @@ const makeStyles = (colors: any, theme) =>
     whiteButtonsContainer: {
       alignItems: "center",
       width: "100%",
-      marginBottom: 30,
     },
     whiteButton: {
       width: "50%",
@@ -374,11 +445,7 @@ const makeStyles = (colors: any, theme) =>
       borderWidth: 2,
     },
     profileInfoContainer: {
-      width: "100%",
-      height:
-        Platform.OS === "android"
-          ? Dimensions.get("screen").height / 1.5
-          : Dimensions.get("screen").height / 2,
+      flex: 1,
     },
     dotStyle: {
       width: 7,
