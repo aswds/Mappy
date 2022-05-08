@@ -1,31 +1,18 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
+import React, { useEffect, useState } from "react";
 import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  Dimensions,
-  SafeAreaView,
-  TextInput,
-  TouchableOpacity,
   FlatList,
+  SafeAreaView,
   StatusBar,
-  Platform,
-  Image,
-  ActivityIndicator,
-  ImageBackground,
+  StyleSheet,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import HeaderSearchBar from "../../components/searchBar";
-import { actuatedNormalize } from "../../components/actuaterNormalize";
-import firebase from "firebase";
 import { SearchBar } from "react-native-elements";
-import { Avatar } from "@react-native-material/core";
-import { MaterialIcons, FontAwesome } from "@expo/vector-icons";
-import { Keyboard } from "react-native";
-import { Image as CachedImage } from "react-native-expo-image-cache";
-import RenderItem from "./RenderItem";
-import { fetchUserFollowers } from "./fetchUserFollowers";
+import { actuatedNormalize } from "../../components/actuaterNormalize";
 import { useTheme } from "../../Theme/ThemeProvider";
+import { fetchUserFollowers } from "./fetchUserFollowers";
+import RenderItem from "./RenderItem";
 const Followers = (props) => {
   const { theme } = useTheme();
   const colors = theme.colors;

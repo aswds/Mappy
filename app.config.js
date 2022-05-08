@@ -6,7 +6,7 @@ export default {
     orientation: "portrait",
     icon: "./src/image/LogoSheet.png",
     splash: {
-      image: "./src/image/LogoSheet.png",
+      image: "./assets/Untitled-1.png",
       resizeMode: "cover",
       backgroundColor: "#ffffff",
     },

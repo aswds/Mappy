@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ProfileScreen from "../../screens/Profile/ProfileScreen";
-import CameraScreen from "../../screens/Profile/camera";
-import EditProfile from "../../screens/Profile/EditProfile";
+import CameraScreen from "../../screens/Profile/EditProfile/camera";
+import EditProfile from "../../screens/Profile/EditProfile/EditProfile";
 import ImageBrowserScreen from "../../screens/Post/ImageBrowserScreen";
 import Settings from "../../screens/settings/Settings";
 import { PostCreatingNavigator } from "./PostCreatingNavigator";
@@ -11,34 +11,29 @@ import { useNavigation } from "@react-navigation/native";
 import UserPage from "../../screens/Profile/UserPage";
 import { UserTopTabFollow } from "../UserTopTabFollow/UserTopTabFollow";
 import { Platform, View, Image } from "react-native";
-import { useTheme } from "@react-navigation/native";
 import { BlurView } from "expo-blur";
-import { ProfileTab } from "./ProfileTabNav";
+import { useTheme } from "../../Theme/ThemeProvider";
+import EditAbout from "../../screens/Profile/ProfileTabScreens/EditAbout";
 const ProfileNav = createNativeStackNavigator();
 export const ProfileNavigator = (props) => {
   const navigation = useNavigation();
-  const theme = useTheme();
-  const { colors } = useTheme();
+  const { theme } = useTheme();
+  const colors = theme.colors;
   return (
     <ProfileNav.Navigator
-      screenOptions={{ headerStyle: { backgroundColor: "transparent" } }}
+      screenOptions={{
+        headerStyle: { backgroundColor: "transparent" },
+        headerShown: false,
+      }}
     >
-      <ProfileNav.Screen
-        name="ProfileScreen"
-        component={ProfileScreen}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <ProfileNav.Screen
-        component={UserPage}
-        name="UserPageProfile"
-        options={{ headerShown: false }}
-      />
+      <ProfileNav.Screen name="ProfileScreen" component={ProfileScreen} />
+      <ProfileNav.Screen component={UserPage} name="UserPageProfile" />
+
       <ProfileNav.Screen
         name="UserTopTabProfile"
         component={UserTopTabFollow}
         options={({ route }) => ({
+          headerShown: true,
           title: route.params.username,
           headerStyle: {
             backgroundColor: theme.dark ? "black" : colors.primary,
@@ -50,17 +45,12 @@ export const ProfileNavigator = (props) => {
           routeName: route.params?.routeName;
         }}
       />
-      <ProfileNav.Screen
-        component={CameraScreen}
-        name="Camera"
-        options={{ headerShown: false }}
-      />
+      <ProfileNav.Screen component={CameraScreen} name="Camera" />
 
       <ProfileNav.Screen component={Settings} name="Settings" />
       <ProfileNav.Screen
         name="ImageBrowserScreen"
         component={ImageBrowserScreen}
-        options={{ headerShown: false }}
       />
 
       <ProfileNav.Screen

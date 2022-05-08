@@ -2,11 +2,12 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import Followers from "../../screens/Profile/Followers";
 import Following from "../../screens/Profile/Following";
 const MyFollowTopTab = createMaterialTopTabNavigator();
-import { useRoute, useTheme } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
+import { useTheme } from "../../Theme/ThemeProvider";
 export const FollowTopTab = (props) => {
   const route = useRoute();
-  const theme = useTheme();
-  const { colors } = useTheme();
+  const { theme } = useTheme();
+  const colors = theme.colors;
   return (
     <MyFollowTopTab.Navigator
       screenOptions={{

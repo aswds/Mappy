@@ -1,35 +1,34 @@
+import { AntDesign, FontAwesome5, Ionicons } from "@expo/vector-icons";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import * as Haptics from "expo-haptics";
 import React, { useEffect, useState } from "react";
 import {
-  View,
-  StyleSheet,
   Dimensions,
-  TouchableOpacity,
-  SafeAreaView,
+  Image,
   PermissionsAndroid,
   Platform,
+  SafeAreaView,
+  StyleSheet,
   Text,
-  Image,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import WhiteButton from "../../components/headerComponents/whiteButton";
-import { actuatedNormalize } from "../../components/actuaterNormalize";
-import { Ionicons } from "@expo/vector-icons";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
-import { mapDarkStyle } from "../../components/mapDarkStyle";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import * as Haptics from "expo-haptics";
 import * as Animatable from "react-native-animatable";
-import MapView, { Marker, PROVIDER_GOOGLE, Callout } from "react-native-maps";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { bindActionCreators } from "redux";
-import { fetchUser } from "../../redux/actions";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import MapView, { Callout, Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { actuatedNormalize } from "../../components/actuaterNormalize";
 import CustomTopNavigator from "../../components/CustomTopNavigator";
+import WhiteButton from "../../components/headerComponents/whiteButton";
+import { mapDarkStyle } from "../../components/mapDarkStyle";
+import { fetchUser } from "../../redux/actions";
 
 const ChosingLocationScreen = (props) => {
   const navigation = useNavigation();
   const route = useRoute();
   const [marker, setMarker] = useState();
+
   const [searchAnimation, setSearchAnimation] = useState();
   const [position, setPosition] = useState({
     latitude: 0,

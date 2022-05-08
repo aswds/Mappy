@@ -13,9 +13,9 @@ import {
 import { NameModal } from "../screens/Loging&Register/NameModal";
 import { theme } from "../components/theme";
 import { AvatarChoose } from "../screens/Loging&Register/AvatarChoose";
-import CameraScreen from "../screens/Profile/camera";
 import { PasswordRules } from "../screens/Loging&Register/PasswordRules";
 import BackButton from "../components/appNavigatorComponents/BackButton";
+import CameraScreen from "../screens/Profile/EditProfile/camera";
 const Stack = createNativeStackNavigator();
 
 export const LoginAndRegister = (props) => {

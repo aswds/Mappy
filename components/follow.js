@@ -1,16 +1,17 @@
 import firebase from "firebase";
 
-const getUserInfo = (userUID) => {
-  const data = firebase
-    .firestore()
-    .collection("users")
-    .doc(userUID)
-    .get()
-    .then((doc) => {
-      doc.exists() && doc.data();
-    });
-  return data;
-};
+export const getUserInfo = (userUID) =>
+  new Promise((resolve, reject) => {
+    const data = firebase
+      .firestore()
+      .collection("users")
+      .doc(userUID)
+      .get()
+      .then((doc) => {
+        doc.exists && doc.data();
+      });
+    resolve(data);
+  });
 
 export async function onFollow(userUID) {
   await Promise.all([userFollowingAdd(userUID), userFollowersAdd(userUID)]);

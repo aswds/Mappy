@@ -1,9 +1,9 @@
-import React from "react";
-import { View, StyleSheet, TouchableOpacity, Text, Image } from "react-native";
-import { actuatedNormalize } from "../../components/actuaterNormalize";
-import { Image as CachedImage } from "react-native-expo-image-cache";
-import firebase from "firebase";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import firebase from "firebase";
+import React from "react";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image as CachedImage } from "react-native-expo-image-cache";
+import { actuatedNormalize } from "../../components/actuaterNormalize";
 import { useTheme } from "../../Theme/ThemeProvider";
 function RenderItem(props) {
   const navigation = useNavigation();

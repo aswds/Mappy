@@ -1,22 +1,20 @@
-import React, { useState, useEffect, useRef } from "react";
-import {
-  StyleSheet,
-  View,
-  SafeAreaView,
-  TouchableOpacity,
-  ImageBackground,
-  Image,
-  Alert,
-} from "react-native";
-import { Camera } from "expo-camera";
-import StyledButton from "../../components/button";
-import { Ionicons, FontAwesome, AntDesign } from "@expo/vector-icons";
-import { TapGestureHandler } from "react-native-gesture-handler";
+import { FontAwesome, Ionicons, AntDesign } from "@expo/vector-icons";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { BlurView } from "expo-blur";
-import { uploadImage } from "../../components/ProfileFunc/uploadImage";
-import { manipulateAsync, FlipType, SaveFormat } from "expo-image-manipulator";
+import { Camera } from "expo-camera";
+import { FlipType, manipulateAsync, SaveFormat } from "expo-image-manipulator";
+import React, { useEffect, useState } from "react";
+import {
+  Alert,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { TapGestureHandler } from "react-native-gesture-handler";
+import StyledButton from "../../../components/button";
 import { PreviewCamera } from "./PreviewCamera";
-import { useRoute } from "@react-navigation/native";
 let camera: Camera;
 const CameraScreen = (props) => {
   const [autofocus, setAutofocus] = useState(Camera.Constants.AutoFocus.on);
@@ -26,6 +24,7 @@ const CameraScreen = (props) => {
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [flashType, setFlashType] = useState(Camera.Constants.FlashMode.off);
   const route = useRoute();
+  const navigation = useNavigation();
   function __retakePicture() {
     setImage(null);
   }
@@ -71,7 +70,8 @@ const CameraScreen = (props) => {
   }
   return (
     <View style={styles.container}>
-      <SafeAreaView style={{ flex: 1, backgroundColor: "black" }}>
+      <StatusBar barStyle="light-content" />
+      <SafeAreaView style={styles.safeAreaContainer}>
         {image ? (
           <PreviewCamera
             photo={image}
@@ -96,6 +96,18 @@ const CameraScreen = (props) => {
             }}
           >
             <BlurView intensity={intensity} style={{ flex: 1 }} tint={"dark"}>
+              <TouchableOpacity
+                style={{
+                  ...styles.buttonStyle,
+                  position: "absolute",
+                  right: 20,
+                  top: 20,
+                  zIndex: 1,
+                }}
+                onPress={() => navigation.goBack()}
+              >
+                <AntDesign name="close" size={40} color="white" />
+              </TouchableOpacity>
               <TapGestureHandler
                 onActivated={() => {
                   setType(
@@ -107,15 +119,8 @@ const CameraScreen = (props) => {
                 }}
                 numberOfTaps={2}
               >
-                <View style={{ flex: 1, justifyContent: "flex-end" }}>
-                  <View
-                    style={{
-                      width: "100%",
-                      height: 100,
-                      flexDirection: "row",
-                      justifyContent: "space-around",
-                    }}
-                  >
+                <View style={styles.bottomContainer}>
+                  <View style={styles.buttonsContainer}>
                     <TouchableOpacity
                       onPress={() => {
                         setFlashType(
@@ -124,18 +129,7 @@ const CameraScreen = (props) => {
                             : Camera.Constants.FlashMode.off
                         );
                       }}
-                      style={{
-                        flex: 1,
-                        alignItems: "center",
-                        justifyContent: "center",
-                        shadowOpacity: 0.4,
-                        shadowOffset: {
-                          height: 0,
-                          width: 0,
-                        },
-                        shadowRadius: 2,
-                        overflow: "hidden",
-                      }}
+                      style={styles.buttonStyle}
                     >
                       <Ionicons
                         name={
@@ -151,18 +145,7 @@ const CameraScreen = (props) => {
                     <View style={{ width: 100, alignItems: "center" }}>
                       <TouchableOpacity
                         activeOpacity={0.6}
-                        style={{
-                          backgroundColor: "rgba(52, 52, 52, 0.8)",
-                          borderRadius: 20,
-                          width: 70,
-                          alignItems: "center",
-                          shadowOpacity: 0.4,
-                          shadowOffset: {
-                            height: 0,
-                            width: 0,
-                          },
-                          shadowRadius: 2,
-                        }}
+                        style={styles.doPhotoButton}
                         onPress={() => {
                           takePicture();
                         }}
@@ -175,17 +158,7 @@ const CameraScreen = (props) => {
                       </TouchableOpacity>
                     </View>
                     <TouchableOpacity
-                      style={{
-                        flex: 1,
-                        alignItems: "center",
-                        justifyContent: "center",
-                        shadowOpacity: 0.4,
-                        shadowOffset: {
-                          height: 0,
-                          width: 0,
-                        },
-                        shadowRadius: 2,
-                      }}
+                      style={styles.buttonStyle}
                       onPress={() => {
                         setType(
                           type === Camera.Constants.Type.back
@@ -206,13 +179,43 @@ const CameraScreen = (props) => {
     </View>
   );
 };
-CameraScreen.navigationOptions = {
-  headerTransparent: true,
-  title: "",
-};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  safeAreaContainer: { flex: 1, backgroundColor: "black" },
+  bottomContainer: { flex: 1, justifyContent: "flex-end" },
+  buttonsContainer: {
+    width: "100%",
+    height: 100,
+    flexDirection: "row",
+    justifyContent: "space-around",
+  },
+
+  buttonStyle: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowOpacity: 0.4,
+    shadowOffset: {
+      height: 0,
+      width: 0,
+    },
+    shadowRadius: 2,
+    overflow: "hidden",
+  },
+  doPhotoButton: {
+    backgroundColor: "rgba(52, 52, 52, 0.8)",
+    borderRadius: 20,
+    width: 70,
+    alignItems: "center",
+    shadowOpacity: 0.4,
+    shadowOffset: {
+      height: 0,
+      width: 0,
+    },
+    shadowRadius: 2,
   },
   camera: {
     flex: 1,

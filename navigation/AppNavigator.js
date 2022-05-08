@@ -22,7 +22,7 @@ import {
 import { useColorScheme } from "react-native";
 import PostCreatingScreen from "../screens/Post/PostCreatingScreen";
 import { PostCreatingNavigator } from "./ProfileNavigation/PostCreatingNavigator";
-import CameraScreen from "../screens/Profile/camera";
+import CameraScreen from "../screens/Profile/EditProfile/camera";
 import { useSelector } from "react-redux";
 import { FollowTopTab } from "./ProfileNavigation/FollowTopTab";
 import FollowHeader from "../components/appNavigatorComponents/FollowHeader";
@@ -34,8 +34,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import ThemeProvider, { useTheme } from "../Theme/ThemeProvider";
 import ThemeWrapper from "../Theme/ThemeWraper";
-import EditProfile from "../screens/Profile/EditProfile";
-
+import EditAbout from "../screens/Profile/ProfileTabScreens/EditAbout";
+import EditProfile from "../screens/Profile/EditProfile/EditProfile";
 const bottomIconSize = 8;
 const Stack = createNativeStackNavigator();
 export const AppNavigator = (props) => {
@@ -98,6 +98,11 @@ export const AppNavigator = (props) => {
           }}
         />
         <Stack.Screen component={EditProfile} name="EditProfile" />
+        <Stack.Screen
+          name="EditAbout"
+          component={EditAbout}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen component={CameraScreen} name="CameraStack" />
       </Stack.Navigator>
     </SafeAreaProvider>

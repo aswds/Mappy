@@ -1,6 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
 import firebase from "firebase";
-import { Alert } from "react-native";
 import { uploadImage } from "../ProfileFunc/uploadImage";
 // add updateProfile after reg new user (in AvatarChoose)
 const signUp = (email, password, username, name, image) => {
@@ -24,7 +22,6 @@ const signUp = (email, password, username, name, image) => {
           userImage: "",
           createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
           userUID: firebase.auth().currentUser.uid,
-          newUser: true,
         })
         .then(() => {
           uploadImage(image);

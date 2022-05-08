@@ -1,8 +1,14 @@
 import firebase from "firebase";
 import { Alert } from "react-native";
-import { View } from "react-native";
-import { ProgressBar } from "react-native-paper";
-const addingPost = (downloadURLs, location, caption) => {
+class Timestamp {}
+const addingPost = (
+  downloadURLs,
+  location,
+  title,
+  caption,
+  rate,
+  rateCaption
+) => {
   firebase
     .firestore()
     .collection("posts")
@@ -11,7 +17,10 @@ const addingPost = (downloadURLs, location, caption) => {
     .add({
       downloadURLs,
       location: location ? location : null,
+      title,
       caption,
+      rate,
+      rateCaption,
       creation: firebase.firestore.FieldValue.serverTimestamp(),
     })
 

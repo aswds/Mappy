@@ -1,31 +1,22 @@
+import { AntDesign, FontAwesome5 } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
+import * as Location from "expo-location";
 import React, { useEffect, useState } from "react";
 import {
-  View,
-  StyleSheet,
   Dimensions,
-  TouchableOpacity,
-  SafeAreaView,
   PermissionsAndroid,
+  SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { bindActionCreators } from "redux";
-import { fetchUser } from "../../redux/actions";
-import { connect } from "react-redux";
-import { FontAwesome5 } from "@expo/vector-icons";
 import * as Animatable from "react-native-animatable";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { AntDesign } from "@expo/vector-icons";
+import MapView, { Callout, PROVIDER_GOOGLE } from "react-native-maps";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import { mapDarkStyle } from "../../components/mapDarkStyle";
-import * as Location from "expo-location";
-import * as Haptics from "expo-haptics";
-import MapView, {
-  Marker,
-  Overlay,
-  Geojson,
-  PROVIDER_DEFAULT,
-  PROVIDER_GOOGLE,
-  Callout,
-} from "react-native-maps";
+import { fetchUser } from "../../redux/actions";
 
 const MainScreen = (props) => {
   const [marker, setMarker] = useState();

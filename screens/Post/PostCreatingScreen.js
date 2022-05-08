@@ -1,46 +1,50 @@
-import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
 import {
-  View,
-  TouchableWithoutFeedback,
-  TouchableOpacity,
-  StyleSheet,
+  Entypo,
+  FontAwesome5,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
+import { useHeaderHeight } from "@react-navigation/elements";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  Alert,
   Dimensions,
-  ScrollView,
-  TextInput,
   Image,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  Text,
-  Alert,
-  StatusBar,
   SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
 } from "react-native";
-import { Entypo, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { actuatedNormalize } from "../../components/actuaterNormalize";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
-import { mapDarkStyle } from "../../components/mapDarkStyle";
-import addingPost from "../../components/addingPost";
-import firebase from "firebase";
-import { uploadMultMedia } from "../../components/uploadMultMedia";
-import saveMediaToStorage from "../../components/saveMediaToStorage";
-import CustomTopNavigator from "../../components/CustomTopNavigator";
 import { useDispatch } from "react-redux";
-import { postUploadingStart, postUploadingEnd } from "../../redux/actions";
-import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
-const keyboardVerticalOffset =
-  Platform.OS === "ios" ? actuatedNormalize(20) : 0;
-const iconBorderRadius = 10;
+import { actuatedNormalize } from "../../components/actuaterNormalize";
+import { mapDarkStyle } from "../../components/mapDarkStyle";
+import { RatingButton } from "../../components/Post/RatingButtonPostCreating";
+import { uploadMultMedia } from "../../components/uploadMultMedia";
+import { postUploadingEnd, postUploadingStart } from "../../redux/actions";
+import { useTheme } from "../../Theme/ThemeProvider";
 
 const PostCreatingScreen = (props) => {
+  const { theme } = useTheme();
+  const colors = theme.colors;
+  const keyboardVerticalOffset = useHeaderHeight();
   const navigation = useNavigation();
+  const textInputRef = useRef();
   const route = useRoute();
   const dispatch = useDispatch();
-  const { colors } = useTheme();
-  const theme = useTheme();
-  const [media, setMedia] = useState(null);
-  const [caption, setCaption] = useState("");
-  const styles = makeStyles(colors);
+  const [rateCaption, setRateCaption] = useState("");
+  const [rate, setRate] = useState();
+
+  const [inputHeight, setInputHeight] = useState(40);
+  const styles = makeStyles(colors, theme, inputHeight);
   useEffect(() => {
     if (route.params?.photos) {
       setMedia(route.params?.photos);
@@ -49,55 +53,7 @@ const PostCreatingScreen = (props) => {
   }, [route.params?.photos]);
 
   const locationData = route.params?.location;
-
-  const renderImage = (item, i) => {
-    return (
-      <TouchableOpacity
-        style={{
-          height: 70,
-          width: 70,
-          margin: 10,
-        }}
-        key={i + Math.random()}
-      >
-        <Image
-          style={{ height: "100%", width: "100%", borderRadius: 5 }}
-          source={{ uri: item.uri }}
-          key={i + Math.random() + "image"}
-        />
-      </TouchableOpacity>
-    );
-  };
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => {
-        return (
-          <TouchableOpacity
-            onPress={async () => {
-              if (media) {
-                dispatch(postUploadingStart());
-                navigation.navigate("ProfileScreen");
-                await uploadMultMedia(media, locationData, caption);
-                dispatch(postUploadingEnd());
-              } else {
-                Alert.alert(
-                  "No files found...",
-                  "Choose some images to countinue."
-                );
-              }
-            }}
-            style={{
-              width: actuatedNormalize(60),
-              alignItems: "center",
-            }}
-          >
-            <Text style={{ color: "white", fontWeight: "bold" }}>Share</Text>
-          </TouchableOpacity>
-        );
-      },
-    });
-  });
-
+  const rateBackground = "rgba(219,219,219,0.6)";
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ flex: 1 }}>
       <StatusBar barStyle="light-content" />
@@ -128,8 +84,8 @@ const PostCreatingScreen = (props) => {
             >
               <TouchableOpacity
                 style={{
-                  height: actuatedNormalize(180),
-                  width: actuatedNormalize(180),
+                  height: actuatedNormalize(150),
+                  width: actuatedNormalize(150),
                 }}
                 onPress={() => {
                   props.navigation.navigate("ChosingLocationScreen");
@@ -139,7 +95,7 @@ const PostCreatingScreen = (props) => {
                   style={{
                     flex: 1,
                     backgroundColor: "rgba(219,219,219,0.33)",
-                    borderRadius: iconBorderRadius,
+                    borderRadius: 10,
                     shadowOpacity: 0.4,
                     shadowOffset: {
                       height: 2,
@@ -189,104 +145,191 @@ const PostCreatingScreen = (props) => {
           )}
         </View>
       </TouchableWithoutFeedback>
+
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>Rate your trip</Text>
+      </View>
+      <View style={styles.scrollViewContainer}>
+        <ScrollView
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          key={Math.random()}
+          contentContainerStyle={{
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: 10,
+          }}
+          style={{
+            flex: 1,
+            backgroundColor: colors.background,
+          }}
+        >
+          <RatingButton
+            backgroundColor={rate === 5 ? "#57e32c" : rateBackground}
+            onPress={() => setRate(5)}
+            icon={
+              <MaterialCommunityIcons
+                name="emoticon-excited-outline"
+                size={35}
+                color={colors.background}
+              />
+            }
+          />
+          <RatingButton
+            backgroundColor={rate === 4 ? "#b7dd29" : rateBackground}
+            onPress={() => setRate(4)}
+            icon={
+              <MaterialCommunityIcons
+                name="emoticon-happy-outline"
+                size={35}
+                color={colors.background}
+              />
+            }
+          />
+          <RatingButton
+            backgroundColor={rate === 3 ? "#ffe234" : rateBackground}
+            onPress={() => setRate(3)}
+            icon={
+              <MaterialCommunityIcons
+                name="emoticon-neutral-outline"
+                size={35}
+                color={colors.background}
+              />
+            }
+          />
+          <RatingButton
+            backgroundColor={rate === 2 ? "#ffa534" : rateBackground}
+            onPress={() => setRate(2)}
+            icon={
+              <MaterialCommunityIcons
+                name="emoticon-confused-outline"
+                size={35}
+                color={colors.background}
+              />
+            }
+          />
+          <RatingButton
+            backgroundColor={rate === 1 ? "#ff4545" : rateBackground}
+            onPress={() => setRate(1)}
+            icon={
+              <MaterialCommunityIcons
+                name="emoticon-sad-outline"
+                size={35}
+                color={colors.background}
+              />
+            }
+          />
+        </ScrollView>
+      </View>
       <KeyboardAvoidingView
-        behavior="padding"
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 2 }}
         keyboardVerticalOffset={keyboardVerticalOffset}
       >
-        <View style={{ flex: 2 }}>
-          <View
-            style={{
-              height: 100,
-              width: Dimensions.get("window").width,
-              borderColor: theme.dark ? "grey" : "black",
-              borderTopWidth: 1,
-              backgroundColor: colors.background,
-            }}
-          >
-            <ScrollView
-              showsHorizontalScrollIndicator={false}
-              horizontal
-              key={Math.random()}
-              contentContainerStyle={{
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: 10,
-              }}
-              style={{
-                flex: 1,
-                backgroundColor: colors.background,
-              }}
-            >
-              <TouchableOpacity
-                style={{ ...styles.modalButton, margin: 10 }}
-                onPress={() => {
-                  props.navigation.navigate("ImagePicker");
-                }}
-              >
-                <View
-                  style={{
-                    flex: 1,
-                    backgroundColor: "rgba(219,219,219,0.33)",
-                    borderRadius: iconBorderRadius,
-                    shadowOpacity: 0.4,
-                    shadowOffset: {
-                      height: 2,
-                      width: 0,
-                    },
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <MaterialIcons
-                    name="add-photo-alternate"
-                    size={40}
-                    color="black"
-                  />
-                </View>
-              </TouchableOpacity>
-              {media && media.map((item, i) => renderImage(item, i))}
-            </ScrollView>
+        <View style={styles.titleContainer}>
+          <View style={{ paddingTop: 10 }}>
+            <Text style={styles.title}>Tello about</Text>
           </View>
           <View
             style={{
-              flex: 1,
-              borderTopWidth: 1,
-              borderColor: theme.dark ? "grey" : "black",
-              backgroundColor: colors.background,
+              marginTop: 20,
+              borderBottomColor: "#E3E3E3",
+              borderBottomWidth: 2,
             }}
           >
             <TextInput
-              placeholder="What's on your mind?"
-              placeholderTextColor={"grey"}
+              onFocus={() => setInputHeight(45)}
+              onEndEditing={() => setInputHeight(null)}
+              onChangeText={setRateCaption}
+              placeholder="Write here"
+              placeholderTextColor={"#7E7E7E"}
+              style={styles.textInputStyle}
               multiline
-              onChangeText={(text) => {
-                setCaption(text);
-              }}
-              style={{
-                textAlignVertical: "top",
-                flex: 1,
-                color: colors.text,
-                padding: 10,
-              }}
+              value={rateCaption}
             />
           </View>
         </View>
       </KeyboardAvoidingView>
+      <SafeAreaView
+        style={{
+          alignItems: "flex-end",
+          position: "absolute",
+          bottom: 5,
+          right: 0,
+          backgroundColor: colors.background,
+        }}
+      >
+        <TouchableOpacity
+          style={styles.nextButtonContainer}
+          onPress={() => {
+            navigation.navigate("Description", {
+              rate,
+              rateCaption,
+              locationData,
+            });
+          }}
+        >
+          <Text style={styles.nextButtonText}>
+            {(locationData && rate) ||
+            (locationData && rateCaption) ||
+            (rate && rateCaption)
+              ? "Next"
+              : "Skip"}
+          </Text>
+          <FontAwesome5 name="arrow-right" size={30} color={colors.text} />
+        </TouchableOpacity>
+      </SafeAreaView>
     </ScrollView>
   );
 };
-
-const makeStyles = (colors: any) =>
+const makeStyles = (colors: any, theme, inputHeight) =>
   StyleSheet.create({
-    modalButton: {
-      height: actuatedNormalize(65),
-      width: actuatedNormalize(65),
-    },
     container: {
       flex: 1,
       backgroundColor: colors.background,
     },
-  });
+    textInputStyle: {
+      padding: 5,
+      color: colors.text,
+      height: inputHeight,
+    },
+    titleContainer: {
+      marginHorizontal: 20,
+    },
 
+    title: {
+      color: colors.text,
+      fontFamily: "WorkSans-Bold",
+      fontSize: 20,
+    },
+    iconContainer: {
+      height: actuatedNormalize(160),
+      width: actuatedNormalize(160),
+      backgroundColor: "rgba(219,219,219,0.6)",
+      borderRadius: 10,
+      shadowOpacity: 0.4,
+      shadowOffset: {
+        height: 2,
+        width: 0,
+      },
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    scrollViewContainer: {
+      height: 100,
+      width: Dimensions.get("window").width,
+      borderColor: theme.dark ? "grey" : "black",
+      backgroundColor: colors.background,
+    },
+    nextButtonContainer: {
+      width: "50%",
+      alignItems: "center",
+      justifyContent: "space-evenly",
+      flexDirection: "row",
+    },
+    nextButtonText: {
+      fontFamily: "WorkSans-Bold",
+      color: colors.text,
+    },
+  });
 export default PostCreatingScreen;

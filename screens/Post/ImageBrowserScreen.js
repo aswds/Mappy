@@ -1,23 +1,11 @@
-import React, { useMemo, useState } from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  SafeAreaView,
-  Alert,
-  TouchableOpacity,
-  ActivityIndicator,
-  StatusBar,
-} from "react-native";
-import { AssetsSelector } from "expo-images-picker";
-import { Ionicons } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import { MediaType } from "expo-media-library";
-import { Asset } from "expo-media-library";
-import { actuatedNormalize } from "../../components/actuaterNormalize";
-import CustomTopNavigator from "../../components/CustomTopNavigator";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { AssetsSelector } from "expo-images-picker";
+import { Asset, MediaType } from "expo-media-library";
+import React, { useMemo } from "react";
+import { SafeAreaView, StatusBar, StyleSheet, View } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { actuatedNormalize } from "../../components/actuaterNormalize";
 const ForceInset = {
   top: "never",
   bottom: "never",
@@ -30,7 +18,7 @@ const ForceInset = {
 export default function ImageBrowserScreen(props) {
   const navigation = useNavigation();
   const onSuccess = (data: Asset[]) => {
-    navigation.navigate("PostCreatingScreen", { photos: data });
+    navigation.navigate("Description", { photos: data });
   };
 
   const widgetErrors = useMemo(

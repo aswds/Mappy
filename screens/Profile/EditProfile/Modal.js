@@ -1,17 +1,16 @@
+import { MaterialIcons } from "@expo/vector-icons";
+import { useNavigation, useTheme } from "@react-navigation/native";
+import * as ImagePicker from "expo-image-picker";
+import { useState } from "react";
 import {
-  View,
+  Dimensions,
+  Modal,
   StyleSheet,
   TouchableOpacity,
-  Dimensions,
   TouchableWithoutFeedback,
-  Modal,
+  View,
 } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
-import * as ImagePicker from "expo-image-picker";
-import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
-import { theme } from "../../components/theme";
-import { useState } from "react";
-import { uploadImage } from "../../components/ProfileFunc/uploadImage";
+import { theme } from "../../../components/theme";
 
 export const ModalPhoto = (props) => {
   const [image, setImage] = useState();
@@ -28,6 +27,7 @@ export const ModalPhoto = (props) => {
 
     if (!result.cancelled) {
       props.imageHandler(result.uri);
+      props.hideModal();
     }
   };
   return (
@@ -62,7 +62,8 @@ export const ModalPhoto = (props) => {
             <TouchableOpacity
               style={styles.modalButtonsStyle}
               onPress={() => {
-                props.hideModal(), pickImage();
+                pickImage();
+                // props.hideModal();
               }}
             >
               <MaterialIcons name="insert-photo" size={100} color="white" />

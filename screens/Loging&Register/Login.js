@@ -1,33 +1,29 @@
+import { Feather, MaterialIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { LinearGradient } from "expo-linear-gradient";
+import firebase from "firebase";
 import React, { useState } from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
+  Alert,
+  Button,
   Dimensions,
+  Image,
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
-  ImageBackground,
-  TextInput,
-  TouchableWithoutFeedback,
-  Keyboard,
-  Button,
-  TouchableOpacity,
   ScrollView,
-  Alert,
-  Image,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
 } from "react-native";
-import validator from "validator";
-import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
-import StyledButton from "../../components/button";
-import { MaterialIcons } from "@expo/vector-icons";
-import firebase from "firebase";
 import * as Animatable from "react-native-animatable";
-import LottieAnimationLogin from "../../components/lottieAnimationLogin";
-import { LinearGradient } from "expo-linear-gradient";
+import validator from "validator";
 import { actuatedNormalize } from "../../components/actuaterNormalize";
+import StyledButton from "../../components/button";
 import Line from "../../components/signIn&signUp/line";
-import { useNavigation } from "@react-navigation/native";
-import { ChangeTheme } from "../../components/signIn&signUp/ChangeTheme";
 const LoginScreen = (props) => {
   const navigation = useNavigation();
   const signIn = (email, password) => {

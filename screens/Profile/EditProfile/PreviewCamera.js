@@ -1,20 +1,9 @@
-import React, { useState, useRef } from "react";
-import {
-  StyleSheet,
-  View,
-  SafeAreaView,
-  TouchableOpacity,
-  ImageBackground,
-  Image,
-  Alert,
-} from "react-native";
-import { Camera } from "expo-camera";
-import StyledButton from "../../components/button";
-import { Ionicons, FontAwesome, AntDesign } from "@expo/vector-icons";
-import { uploadImage } from "../../components/ProfileFunc/uploadImage";
+import { AntDesign } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import GestureRecognizer from "react-native-swipe-gestures";
+import React, { useState } from "react";
+import { ImageBackground, TouchableOpacity, View } from "react-native";
 import Modal from "react-native-modalbox";
+import { uploadImage } from "../../../components/ProfileFunc/uploadImage";
 
 export const PreviewCamera = (props) => {
   const route = useRoute();

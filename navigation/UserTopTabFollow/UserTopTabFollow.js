@@ -9,7 +9,7 @@ const UserTopTabFollowNav = createMaterialTopTabNavigator();
 export const UserTopTabFollow = (props) => {
   const route = useRoute();
   const { theme } = useTheme();
-  const colors = useTheme();
+  const colors = theme.colors;
   return (
     <UserTopTabFollowNav.Navigator
       screenOptions={{

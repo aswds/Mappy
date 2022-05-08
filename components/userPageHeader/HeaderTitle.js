@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { View, Text } from "react-native";
 import firebase from "firebase";
+import React, { useEffect, useState } from "react";
+import { Text, View } from "react-native";
 function FollowUserPageHeader({ userUID }) {
   const [username, setUsername] = useState();
   useEffect(() => {

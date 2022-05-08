@@ -1,32 +1,19 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  Dimensions,
-  SafeAreaView,
-  TextInput,
-  TouchableOpacity,
-  FlatList,
-  StatusBar,
-  Platform,
-  Image,
-  ActivityIndicator,
-  ImageBackground,
-} from "react-native";
-import HeaderSearchBar from "../../components/searchBar";
-import { actuatedNormalize } from "../../components/actuaterNormalize";
-import firebase from "firebase";
-import { SearchBar } from "react-native-elements";
-import { Avatar } from "@react-native-material/core";
-import { MaterialIcons, FontAwesome } from "@expo/vector-icons";
-import { Keyboard } from "react-native";
-import { Image as CachedImage } from "react-native-expo-image-cache";
-import RenderItem from "./RenderItem";
-import { fetchUserFollowers } from "./fetchUserFollowers";
+import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { useRoute } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
+import {
+  FlatList,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { SearchBar } from "react-native-elements";
+import { actuatedNormalize } from "../../components/actuaterNormalize";
 import { useTheme } from "../../Theme/ThemeProvider";
+import { fetchUserFollowers } from "./fetchUserFollowers";
+import RenderItem from "./RenderItem";
 const UserFollowers = (props) => {
   const route = useRoute();
   const { theme } = useTheme();

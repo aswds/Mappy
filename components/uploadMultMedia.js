@@ -3,9 +3,17 @@ import saveMediaToStorage from "./saveMediaToStorage";
 import { useState } from "react";
 import addingPost from "./addingPost";
 import { postUploadingStart, postUploadingEnd } from "../redux/actions";
-export const uploadMultMedia = async (media, location, caption) => {
+export const uploadMultMedia = async (
+  media,
+  location,
+  title,
+  caption,
+  rate,
+  rateCaption
+) => {
   const downloadURLs = await Promise.all(
     media.map((p) => saveMediaToStorage(p))
   );
-  addingPost(downloadURLs, location, caption);
+  console.log(`UPloading: ${rateCaption}`);
+  addingPost(downloadURLs, location, title, caption, rate, rateCaption);
 };

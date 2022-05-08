@@ -1,30 +1,24 @@
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  StatusBar,
-  Text,
-  SafeAreaView,
-  Platform,
-  Image,
-} from "react-native";
-import React, { useState, useEffect } from "react";
-import { MaterialIcons, AntDesign, FontAwesome5 } from "@expo/vector-icons";
-import * as ImagePicker from "expo-image-picker";
+import { FontAwesome5 } from "@expo/vector-icons";
 import {
   DarkTheme,
   useNavigation,
   useRoute,
   useTheme,
 } from "@react-navigation/native";
-import { theme } from "../../components/theme";
-import { uploadImage } from "../../components/ProfileFunc/uploadImage";
-import WhiteButton from "../../components/headerComponents/whiteButton";
-import * as Animatable from "react-native-animatable";
+import * as ImagePicker from "expo-image-picker";
+import React, { useEffect, useState } from "react";
+import {
+  Image,
+  Platform,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { actuatedNormalize } from "../../components/actuaterNormalize";
-import { ModalPhoto } from "../Profile/Modal";
-import signUp from "../../components/signIn&signUp/signUp";
-import { imageBlob } from "../../components/signIn&signUp/imageBlob";
+import { ModalPhoto } from "../Profile/EditProfile/Modal";
 export const AvatarChoose = (props) => {
   const route = useRoute();
 

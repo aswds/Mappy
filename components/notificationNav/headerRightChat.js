@@ -1,8 +1,8 @@
+import { Entypo } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { actuatedNormalize } from "../actuaterNormalize";
-import { Entypo } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
 const ChatButton = ({ containerStyle, size, onPress }) => {
   const navigation = useNavigation();
   return (

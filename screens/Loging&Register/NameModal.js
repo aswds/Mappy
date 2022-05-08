@@ -1,33 +1,26 @@
-import React, { useState } from "react";
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Dimensions,
-  TouchableWithoutFeedback,
-  Modal,
-  Text,
-  SafeAreaView,
-  TextInput,
-  Keyboard,
-  KeyboardAvoidingView,
-  StatusBar,
-  Platform,
-} from "react-native";
-import { MaterialIcons, AntDesign, FontAwesome5 } from "@expo/vector-icons";
-import * as ImagePicker from "expo-image-picker";
+import { FontAwesome5 } from "@expo/vector-icons";
 import {
   DarkTheme,
   useNavigation,
   useRoute,
   useTheme,
 } from "@react-navigation/native";
-import { theme } from "../../components/theme";
-import { uploadImage } from "../../components/ProfileFunc/uploadImage";
-import WhiteButton from "../../components/headerComponents/whiteButton";
-import * as Animatable from "react-native-animatable";
+import React, { useState } from "react";
+import {
+  Dimensions,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 import { actuatedNormalize } from "../../components/actuaterNormalize";
-import firebase from "firebase";
 
 export const NameModal = (props) => {
   const [name, setName] = useState();

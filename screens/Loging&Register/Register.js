@@ -1,36 +1,33 @@
-import React, { useState } from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
-  Dimensions,
-  KeyboardAvoidingView,
-  Platform,
-  ImageBackground,
-  TextInput,
-  TouchableWithoutFeedback,
-  Keyboard,
-  ScrollView,
-  Alert,
-  Image,
-  TouchableOpacity,
-} from "react-native";
-import {
-  Feather,
   AntDesign,
-  MaterialIcons,
+  Feather,
   MaterialCommunityIcons,
+  MaterialIcons,
 } from "@expo/vector-icons";
-import StyledButton from "../../components/button";
-import LottieAnimationLogin from "../../components/lottieAnimationLogin";
-import firebase from "firebase";
-import * as Animatable from "react-native-animatable";
-import Line from "../../components/signIn&signUp/line";
-import signUp from "../../components/signIn&signUp/signUp";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
-import { uploadImage } from "../../components/ProfileFunc/uploadImage";
+import firebase from "firebase";
+import React, { useState } from "react";
+import {
+  Alert,
+  Dimensions,
+  Image,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
+import * as Animatable from "react-native-animatable";
 import validator from "validator";
+import StyledButton from "../../components/button";
+import Line from "../../components/signIn&signUp/line";
+import signUp from "../../components/signIn&signUp/signUp";
 const RegisterScreen = (props) => {
   const [username, setUsername] = useState("");
   const [valid, setValid] = useState({
@@ -128,16 +125,6 @@ const RegisterScreen = (props) => {
 
   return (
     <LinearGradient style={{ flex: 1 }} colors={["#333333", "#000"]}>
-      {isLoading ? (
-        <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <LottieAnimationLogin />
-        </View>
-      ) : null}
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <ScrollView
           contentContainerStyle={styles.container}
@@ -290,12 +277,7 @@ const RegisterScreen = (props) => {
                     <Animatable.View
                       animation="fadeInLeft"
                       duration={500}
-                      style={{
-                        flexDirection: "row",
-                        height: 30,
-                        alignItems: "center",
-                        width: Dimensions.get("window").width / 1.5,
-                      }}
+                      style={styles.animationStyle}
                     >
                       <Text
                         style={{ color: "lightgrey" }}
@@ -363,7 +345,10 @@ const RegisterScreen = (props) => {
                 }}
               >
                 <Text
-                  style={{ ...styles.textTermsStyle, color: "cornflowerblue" }}
+                  style={{
+                    ...styles.textTermsStyle,
+                    color: "cornflowerblue",
+                  }}
                 >
                   Terms of service
                 </Text>
