@@ -1,4 +1,5 @@
 import firebase from "firebase";
+import { Alert } from "react-native";
 import {
   USER_STATE_CHANGE,
   USER_POST_STATE_CHANGE,
@@ -51,7 +52,7 @@ export function fetchUserPosts() {
           posts,
         });
       })
-      .catch((e) => console.log(e));
+      .catch((e) => Alert.alert(e));
   };
 }
 export const fetchUserFollowing = () => {

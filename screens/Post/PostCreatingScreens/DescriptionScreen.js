@@ -138,7 +138,6 @@ export const Description = () => {
                   color="black"
                 />
               </View>
-              {console.log(rateCaption)}
             </TouchableOpacity>
             {media &&
               media.map((item, key) => <RenderImage item={item} key={key} />)}

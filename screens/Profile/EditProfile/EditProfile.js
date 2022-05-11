@@ -34,6 +34,7 @@ import { TextInput as CustomTextInput } from "react-native-paper";
 import { freeUsername } from "./freeUsername";
 import { useTheme } from "../../../Theme/ThemeProvider";
 import { Field } from "./components/Field";
+import { Buttons } from "./components/Buttons";
 const EditProfile = (props) => {
   const navigation = useNavigation();
   const { theme } = useTheme();
@@ -91,10 +92,10 @@ const EditProfile = (props) => {
 
   const checkOnChange = (phoneNumber, country, city, username, imageUri) => {
     if (
-      phoneNumber == phoneNumberDisplyed &&
-      country == countryDisplayed &&
-      city == cityDisplayed &&
-      username == usernameDisplay &&
+      phoneNumber == phoneNumber &&
+      country == country &&
+      city == city &&
+      username == username &&
       imageUri == profileImage
     ) {
       navigation.goBack();
@@ -160,18 +161,14 @@ const EditProfile = (props) => {
                     flex: 1,
                   }}
                 >
-                  {image != null ? (
-                    <CachedImage
-                      uri={route.params?.profileImage}
-                      defaultSource={{ uri: image }}
-                      style={styles.imageStyle}
-                    />
-                  ) : (
-                    <Image
-                      source={require("../../../src/image/logoAuth.png")}
-                      style={styles.imageStyle}
-                    />
-                  )}
+                  <Image
+                    source={
+                      route.params?.profileImage
+                        ? { uri: route.params?.profileImage }
+                        : require("../../../src/image/logoAuth.png")
+                    }
+                    style={styles.imageStyle}
+                  />
                 </View>
                 <View
                   style={{
@@ -325,26 +322,26 @@ const EditProfile = (props) => {
                 />
               </Field>
             </View>
-            <View style={styles.whiteButtonContainer}>
+            <View style={styles.buttonsContainer}>
               <View>
-                <WhiteButton
-                  style={{ width: 80 }}
+                <Buttons
+                  text={"Cancle"}
+                  textStyle={styles.textStyle}
                   onPress={() => {
                     navigation.goBack();
                   }}
-                  text="Cancle"
                 />
               </View>
               <View>
-                <WhiteButton
-                  style={{ width: 80 }}
+                <Buttons
+                  text={"Save"}
+                  textStyle={styles.textStyle}
                   onPress={() => {
                     checkOnChange(phoneNumber, country, city, username, image);
                     navigation.navigate("ProfileScreen", {
                       imageURI: image,
                     });
                   }}
-                  text="Save"
                 />
               </View>
             </View>
@@ -365,6 +362,15 @@ const makeStyles = (colors: any, theme) =>
   StyleSheet.create({
     container: {
       flex: 1,
+    },
+    textStyle: {
+      fontFamily: "WorkSans-Bold",
+      color: colors.text,
+      fontSize: 20,
+      shadowColor: colors.text,
+      shadowOpacity: 0.6,
+      shadowRadius: 2,
+      shadowOffset: { height: 0, width: 0 },
     },
     titleContainer: {
       marginVertical: 10,
@@ -465,13 +471,15 @@ const makeStyles = (colors: any, theme) =>
       borderRadius: 10,
       color: colors.text,
     },
-    whiteButtonContainer: {
+    buttonsContainer: {
       width: "100%",
+      height: 50,
       alignItems: "center",
-      justifyContent: "center",
+      justifyContent: "space-around",
+
       flexDirection: "row",
       marginVertical: 20,
-      backgroundColor: "green",
+      shadowRadius: 5,
     },
     modalButtonsStyle: {
       height: 130,
