@@ -29,7 +29,7 @@ export const ShareButton = ({
     <SafeAreaView style={styles.safeAreaContainer}>
       <TouchableOpacity
         onPress={async () => {
-          if (media) {
+          if (media && title) {
             dispatch(postUploadingStart());
             navigation.navigate("ProfileScreen");
             await uploadMultMedia(
@@ -44,7 +44,7 @@ export const ShareButton = ({
           } else {
             Alert.alert(
               "No files found...",
-              "Choose some images to countinue."
+              "Choose some images and pick a title to countinue."
             );
           }
         }}

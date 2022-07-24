@@ -12,7 +12,7 @@ import { SearchBar } from "react-native-elements";
 import { actuatedNormalize } from "../../components/actuaterNormalize";
 import { useTheme } from "../../Theme/ThemeProvider";
 import { fetchUserFollowers } from "./fetchUserFollowers";
-import RenderItem from "./RenderItem";
+import RenderItem from "./Render_Post_Item/RenderItem";
 const Followers = (props) => {
   const { theme } = useTheme();
   const colors = theme.colors;

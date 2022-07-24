@@ -1,15 +1,12 @@
-import ChosingLocationScreen from "../../screens/Post/ChosingLocationScreen";
-import PostCreatingScreen from "../../screens/Post/PostCreatingScreen";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import BackButton from "../../components/appNavigatorComponents/BackButton";
-import { actuatedNormalize } from "../../components/actuaterNormalize";
-import ImageBrowserScreen from "../../screens/Post/ImageBrowserScreen";
 import { useNavigation } from "@react-navigation/native";
-import { StyleSheet, TouchableOpacity } from "react-native";
-import { Entypo, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { HeaderBackButton } from "@react-navigation/elements";
-import { useTheme } from "../../Theme/ThemeProvider";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { StyleSheet } from "react-native";
+import BackButton from "../../components/appNavigatorComponents/BackButton";
+import ChosingLocationScreen from "../../screens/Post/ChosingLocationScreen";
+import ImageBrowserScreen from "../../screens/Post/ImageBrowserScreen";
 import { Description } from "../../screens/Post/PostCreatingScreens/DescriptionScreen";
+import PostCreatingScreen from "../../screens/Post/PostCreatingScreens/PostCreatingScreen";
+import { useTheme } from "../../Theme/ThemeProvider";
 const MyPostStack = createNativeStackNavigator();
 export const PostCreatingNavigator = (props) => {
   const { theme } = useTheme();

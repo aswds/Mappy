@@ -3,8 +3,8 @@ import firebase from "firebase";
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Image as CachedImage } from "react-native-expo-image-cache";
-import { actuatedNormalize } from "../../components/actuaterNormalize";
-import { useTheme } from "../../Theme/ThemeProvider";
+import { actuatedNormalize } from "../../../components/actuaterNormalize";
+import { useTheme } from "../../../Theme/ThemeProvider";
 function RenderItem(props) {
   const navigation = useNavigation();
   const { theme } = useTheme();
@@ -26,7 +26,7 @@ function RenderItem(props) {
         <CachedImage uri={item.userImage} style={styles.avataStyle} />
       ) : (
         <Image
-          source={require("../../src/image/logoAuth.png")}
+          source={require("../../../src/image/logoAuth.png")}
           style={styles.avataStyle}
         />
       )}

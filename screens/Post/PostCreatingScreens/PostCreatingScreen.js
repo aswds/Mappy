@@ -25,12 +25,12 @@ import {
 } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { useDispatch } from "react-redux";
-import { actuatedNormalize } from "../../components/actuaterNormalize";
-import { mapDarkStyle } from "../../components/mapDarkStyle";
-import { RatingButton } from "../../components/Post/RatingButtonPostCreating";
-import { uploadMultMedia } from "../../components/uploadMultMedia";
-import { postUploadingEnd, postUploadingStart } from "../../redux/actions";
-import { useTheme } from "../../Theme/ThemeProvider";
+import { actuatedNormalize } from "../../../components/actuaterNormalize";
+import { mapDarkStyle } from "../../../components/mapDarkStyle";
+import { RatingButton } from "../../../components/Post/RatingButtonPostCreating";
+import { uploadMultMedia } from "../../../components/uploadMultMedia";
+import { postUploadingEnd, postUploadingStart } from "../../../redux/actions";
+import { useTheme } from "../../../Theme/ThemeProvider";
 
 const PostCreatingScreen = (props) => {
   const { theme } = useTheme();

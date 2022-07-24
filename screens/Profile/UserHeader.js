@@ -147,7 +147,7 @@ const UserPage = (props) => {
   // }
 
   return (
-    <SafeAreaView style={styles.containerSafeArea} pointerEvents="box-none">
+    <View style={styles.containerSafeArea} pointerEvents="box-none">
       <StatusBar barStyle="light-content" />
       <TouchableOpacity
         onPress={() => {
@@ -349,7 +349,7 @@ const UserPage = (props) => {
           </View>
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

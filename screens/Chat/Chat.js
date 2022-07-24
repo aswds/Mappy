@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
   View,
   Text,
@@ -33,6 +33,7 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import { useTheme } from "../../Theme/ThemeProvider";
 import InputBox from "../../components/Chat/Input/InputBox";
 import { BlurView } from "expo-blur";
+import { GiftedChat, InputToolbar } from "react-native-gifted-chat";
 const content = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const Messages = [
   {
@@ -76,46 +77,74 @@ const Messages = [
       "Hey there, this is my test for a post of my social app in React Native.",
   },
 ];
+const customInput = (props) => {
+  return (
+    <InputToolbar
+      {...props}
+      accessoryStyle={{ backgroundColor: "black" }}
+      containerStyle={{
+        borderRadius: 25,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    />
+  );
+};
 const Chat = (props) => {
   const [search, setSearch] = useState();
   const [input, setInput] = useState();
+  const [messages, setMessages] = useState([]);
   const { theme } = useTheme();
   const colors = theme.colors;
   const headerHeight = useHeaderHeight();
   const styles = makeStyles(colors);
   const scrollViewRef = useRef();
 
+  useEffect(() => {
+    setMessages([
+      {
+        _id: 1,
+        text: "Hello developer",
+        createdAt: new Date(),
+        user: {
+          _id: 2,
+          name: "React Native",
+          avatar: "https://placeimg.com/140/140/any",
+        },
+      },
+    ]);
+  }, []);
+
   const onKeyboardAppears = () => {
     scrollViewRef.current.scrollToEnd({ animated: true });
   };
+  const onSend = useCallback((messages = []) => {
+    setMessages((previousMessages) =>
+      GiftedChat.append(previousMessages, messages)
+    );
+  }, []);
 
   return (
     <View style={styles.container}>
-      <KeyboardAvoidingView
+      {/* <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.keyboardAvoidContainer}
         keyboardVerticalOffset={headerHeight}
         keyboardShouldPersistTaps={"always"}
-      >
-        <ScrollView ref={scrollViewRef}>
-          {content.map((num) => (
-            <View
-              style={{
-                height: 80,
-                margin: 10,
-                borderWidth: 1,
-                justifyContent: "center",
-                alignItems: "center",
-                borderColor: colors.text,
-              }}
-              key={num}
-            >
-              <Text style={{ color: colors.text }}>{num}</Text>
-            </View>
-          ))}
-        </ScrollView>
-        <InputBox onKeyboardAppears={onKeyboardAppears} />
-      </KeyboardAvoidingView>
+      > */}
+      {/* <ScrollView ref={scrollViewRef}>
+         
+        </ScrollView> */}
+      <GiftedChat
+        messages={messages}
+        onSend={(messages) => onSend(messages)}
+        renderInputToolbar={(props) => customInput(props)}
+        user={{
+          _id: 1,
+        }}
+      />
+      {/* <InputBox onKeyboardAppears={onKeyboardAppears} /> */}
+      {/* </KeyboardAvoidingView> */}
     </View>
   );
 };

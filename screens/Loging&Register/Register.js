@@ -28,6 +28,7 @@ import validator from "validator";
 import StyledButton from "../../components/button";
 import Line from "../../components/signIn&signUp/line";
 import signUp from "../../components/signIn&signUp/signUp";
+import { style } from "./style";
 const RegisterScreen = (props) => {
   const [username, setUsername] = useState("");
   const [valid, setValid] = useState({
@@ -165,6 +166,7 @@ const RegisterScreen = (props) => {
                       ...styles.inputField,
                     }}
                     placeholder="Username"
+                    placeholderTextColor={style.color}
                     onChangeText={(text) => {
                       setUsername(text);
                       similarUsers(text);
@@ -206,6 +208,7 @@ const RegisterScreen = (props) => {
                     autoCapitalize="none"
                     keyboardType="email-address"
                     placeholder="Email"
+                    placeholderTextColor={style.color}
                     onEndEditing={() => {
                       similarEmail(userEmail);
                     }}
@@ -260,6 +263,7 @@ const RegisterScreen = (props) => {
                     style={styles.inputField}
                     secureTextEntry={showPassword}
                     placeholder="Password"
+                    placeholderTextColor={style.color}
                     onChangeText={(text) => {
                       setUserPassword(text), checkPassword(text);
                     }}
@@ -313,6 +317,7 @@ const RegisterScreen = (props) => {
                       autoCapitalize="none"
                       secureTextEntry={showPassword}
                       placeholder="Confirm your password"
+                      placeholderTextColor={style.color}
                       onChangeText={(text) => setConfirmPass(text)}
                       defaultValue={confirmPass}
                     />

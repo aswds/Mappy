@@ -36,12 +36,10 @@ export const Description = () => {
   const colors = theme.colors;
   const styles = makeStyles(colors, theme);
 
-  useEffect(() => {
-    if (route.params?.photos) {
-      setMedia(route.params?.photos);
-      delete route.params?.photos;
-    }
-  }, [route.params?.photos]);
+  if (route.params?.photos) {
+    setMedia(route.params.photos);
+    delete route.params.photos;
+  }
 
   return (
     <>
@@ -102,11 +100,7 @@ export const Description = () => {
             showsHorizontalScrollIndicator={false}
             horizontal
             key={Math.random()}
-            contentContainerStyle={{
-              justifyContent: "space-between",
-              alignItems: "center",
-              padding: 10,
-            }}
+            contentContainerStyle={styles.scrollViewContentCont}
             style={{
               flex: 1,
               backgroundColor: colors.background,
@@ -118,20 +112,7 @@ export const Description = () => {
                 navigation.navigate("ImagePicker");
               }}
             >
-              <View
-                style={{
-                  flex: 1,
-                  backgroundColor: "rgba(219,219,219,0.33)",
-                  borderRadius: 10,
-                  shadowOpacity: 0.4,
-                  shadowOffset: {
-                    height: 2,
-                    width: 0,
-                  },
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
+              <View style={styles.addPhotosContainer}>
                 <MaterialIcons
                   name="add-photo-alternate"
                   size={40}
@@ -157,9 +138,26 @@ export const Description = () => {
 };
 const makeStyles = (colors, theme, inputHeight) =>
   StyleSheet.create({
+    scrollViewContentCont: {
+      justifyContent: "space-between",
+      alignItems: "center",
+      padding: 10,
+    },
     container: {
       flex: 1,
       backgroundColor: colors.background,
+    },
+    addPhotosContainer: {
+      flex: 1,
+      backgroundColor: "rgba(219,219,219,0.33)",
+      borderRadius: 10,
+      shadowOpacity: 0.4,
+      shadowOffset: {
+        height: 2,
+        width: 0,
+      },
+      justifyContent: "center",
+      alignItems: "center",
     },
     textInputStyle: {
       padding: 5,

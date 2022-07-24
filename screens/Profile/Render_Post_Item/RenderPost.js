@@ -12,15 +12,20 @@ import {
 } from "react-native";
 import { colors } from "react-native-elements";
 import { SliderBox } from "react-native-image-slider-box";
-import { useTheme } from "../../Theme/ThemeProvider";
+import { useTheme } from "../../../Theme/ThemeProvider";
 import { AntDesign, FontAwesome, Ionicons } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
-import { actuatedNormalize } from "../../components/actuaterNormalize";
+import { actuatedNormalize } from "../../../components/actuaterNormalize";
+import PostModal from "./PostModal";
+import { useNavigation } from "@react-navigation/native";
 export const RenderPosts = ({ item }) => {
-  const [captionHeight, setCaptionHeight] = useState("30%");
+  const [showModal, setShowModal] = useState(false);
+  const [caption, setCaption] = useState({ height: "30%", width: "50%" });
+  const [captionIsOpened, setCaptionIsOpened] = useState(false);
   const { theme } = useTheme();
   const colors = theme.colors;
   const styles = makeStyles(colors);
+  const navigation = useNavigation();
   const convertTimestamp = (timestamp) => {
     if (timestamp) {
       const date = timestamp.toDate().toLocaleTimeString("default", {
@@ -32,109 +37,128 @@ export const RenderPosts = ({ item }) => {
       return date;
     }
   };
+  const data = {
+    caption: item.caption,
+    title: item.title,
+    images: item.downloadURLs,
+    time: convertTimestamp(item.creation),
+    rate: item.rate,
+    rateCaption: item.rateCaption,
+  };
+  const _hideModal = () => {
+    setShowModal(false);
+  };
+
   const iconSize = 25;
   return (
-    <TouchableOpacity
-      activeOpacity={0.95}
-      onPress={() => console.log("Opened")}
-      style={[
-        styles.post,
-        {
-          marginTop: 0,
-          backgroundColor: colors.background,
-        },
-      ]}
-    >
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>{item.title ? item.title : "Untitled"}</Text>
-        <Text style={styles.dateText}>{convertTimestamp(item.creation)}</Text>
-      </View>
-      <View style={styles.postContent}>
-        <View style={styles.imagesContainer}>
-          <Image
-            style={styles.postImageSmall}
-            source={{
-              uri: `${item.downloadURLs[2]}`,
-            }}
-          />
-          <Image
-            style={{ ...styles.postImageSmall, ...styles.postImageMedium }}
-            source={{
-              uri: `${item.downloadURLs[1]}`,
-            }}
-          />
-          <Image
-            style={{
-              ...styles.postImageSmall,
-              ...styles.postImageBig,
-            }}
-            source={{
-              uri: `${item.downloadURLs[0]}`,
-            }}
-          />
-        </View>
-        <View style={styles.openPhotosButton}>
-          <TouchableOpacity style={styles.arrowButton}>
-            <AntDesign name="arrowright" size={40} color="#575757" />
-          </TouchableOpacity>
-        </View>
-      </View>
-      <View style={styles.locationContainer}>
-        <Text style={styles.locationText} numberOfLines={1}>
-          New York, Backer street fd Dfd
-        </Text>
-        <TouchableOpacity>
-          <Text style={styles.clickLocation}>Click to see</Text>
-        </TouchableOpacity>
-      </View>
+    <>
       <TouchableOpacity
-        style={{
-          marginVertical: 10,
-          width: "50%",
-          maxWidth: "99%",
-        }}
+        activeOpacity={0.95}
+        onPress={() => setShowModal(true)}
+        style={[
+          styles.post,
+          {
+            marginTop: 0,
+            backgroundColor: colors.background,
+          },
+        ]}
       >
-        <Text
-          numberOfLines={1}
-          style={{
-            color: "lightgrey",
-            fontFamily: "WorkSans-Regular",
-          }}
-        >
-          {item.caption}
-        </Text>
-      </TouchableOpacity>
-      <View style={styles.postActions}>
-        <View style={styles.postActionsView}>
-          <View style={styles.actionContainer}>
-            <TouchableOpacity style={[styles.postActionIcon]}>
-              <Ionicons name="heart-outline" size={30} color={colors.text} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.postActionIcon}>
-              <Ionicons
-                name="chatbubble-outline"
-                size={iconSize}
-                color={colors.text}
-              />
+        {console.log(item)}
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>
+            {item.title ? item.title : "Untitled"}
+          </Text>
+          <Text style={styles.dateText}>{convertTimestamp(item.creation)}</Text>
+        </View>
+        <View style={styles.postContent}>
+          <View style={styles.imagesContainer}>
+            <Image
+              style={styles.postImageSmall}
+              source={{
+                uri: `${item.downloadURLs[2]}`,
+              }}
+            />
+            <Image
+              style={{ ...styles.postImageSmall, ...styles.postImageMedium }}
+              source={{
+                uri: `${item.downloadURLs[1]}`,
+              }}
+            />
+            <Image
+              style={{
+                ...styles.postImageSmall,
+                ...styles.postImageBig,
+              }}
+              source={{
+                uri: `${item.downloadURLs[0]}`,
+              }}
+            />
+          </View>
+          <View style={styles.openPhotosButton}>
+            <TouchableOpacity style={styles.arrowButton}>
+              <AntDesign name="arrowright" size={40} color="#575757" />
             </TouchableOpacity>
           </View>
-          <View style={{}}>
-            <TouchableOpacity style={[styles.postActionIcon]}>
-              {/* <FontAwesome
+        </View>
+        <View style={styles.locationContainer}>
+          <Text style={styles.locationText} numberOfLines={1}>
+            New York, Backer street fd Dfd
+          </Text>
+          <TouchableOpacity>
+            <Text style={styles.clickLocation}>Click to see</Text>
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity
+          style={{
+            marginVertical: 10,
+            width: "50%",
+            maxWidth: "99%",
+          }}
+        >
+          <Text
+            numberOfLines={1}
+            style={{
+              color: "lightgrey",
+              fontFamily: "WorkSans-Regular",
+            }}
+          >
+            {item.caption}
+          </Text>
+        </TouchableOpacity>
+        <View style={styles.postActions}>
+          <View style={styles.postActionsView}>
+            <View style={styles.actionContainer}>
+              <TouchableOpacity style={[styles.postActionIcon]}>
+                <Ionicons name="heart-outline" size={30} color={colors.text} />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.postActionIcon}>
+                <Ionicons
+                  name="chatbubble-outline"
+                  size={iconSize}
+                  color={colors.text}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={{}}>
+              <TouchableOpacity style={[styles.postActionIcon]}>
+                {/* <FontAwesome
                 name="share-square-o"
                 size={24}
                 color={colors.text}
               /> */}
-              <Ionicons
-                name="share-social-sharp"
-                size={iconSize}
-                color={colors.text}
-              />
-            </TouchableOpacity>
+                <Ionicons
+                  name="share-social-sharp"
+                  size={iconSize}
+                  color={colors.text}
+                />
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+
+      <PostModal hideModal={_hideModal} data={data} showModal={showModal} />
+    </>
   );
 };
 const makeStyles = (colors) =>
@@ -245,7 +269,6 @@ const makeStyles = (colors) =>
       alignSelf: "center",
       width: "100%",
       alignItems: "center",
-      backgroundColor: "white",
     },
     postActionsView: {
       display: "flex",

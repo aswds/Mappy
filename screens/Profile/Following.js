@@ -13,7 +13,7 @@ import { SearchBar } from "react-native-elements";
 import { actuatedNormalize } from "../../components/actuaterNormalize";
 import { useTheme } from "../../Theme/ThemeProvider";
 import { fetchUserFollowing } from "./fetchUserFollowing";
-import RenderItem from "./RenderItem";
+import RenderItem from "./Render_Post_Item/RenderItem";
 const Following = (props) => {
   const navigation = useNavigation();
   const route = useRoute();

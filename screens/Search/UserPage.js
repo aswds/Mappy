@@ -4,6 +4,7 @@ import {
   StyleSheet,
   View,
   Text,
+  SafeAreaView,
 } from "react-native";
 
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -17,8 +18,9 @@ import { fetchUser, fetchUserFollowing } from "../../redux/actions";
 import { useTheme } from "../../Theme/ThemeProvider";
 import UserPageListHeader from "./UserPageListHeader";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import RenderPosts from "../Profile/RenderPost";
+import RenderPosts from "../Profile/Render_Post_Item/RenderPost";
 import { fetchUserPosts } from "./FetchUserFuncs/fetchUserPosts";
+import { UserAbout } from "./UserAbout";
 const UserPage = (props) => {
   const { theme } = useTheme();
   const colors = theme.colors;
@@ -54,7 +56,7 @@ const UserPage = (props) => {
     }, 1500);
   };
   return (
-    <>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <Tabs.Container
         HeaderComponent={UserPageListHeader}
         headerContainerStyle={{}}
@@ -63,7 +65,6 @@ const UserPage = (props) => {
             {...props}
             style={{
               backgroundColor: colors.background,
-              paddingTop: insets.top,
             }}
             activeColor={colors.text}
             inactiveColor="grey"
@@ -75,7 +76,6 @@ const UserPage = (props) => {
           />
         )}
       >
-        {console.log("F")}
         <Tabs.Tab name="Posts">
           <Tabs.FlatList
             refreshControl={
@@ -97,13 +97,11 @@ const UserPage = (props) => {
         </Tabs.Tab>
         <Tabs.Tab name="About">
           <Tabs.ScrollView style={styles.tabScrollView}>
-            <View>
-              <Text>User about</Text>
-            </View>
+            <UserAbout />
           </Tabs.ScrollView>
         </Tabs.Tab>
       </Tabs.Container>
-    </>
+    </SafeAreaView>
   );
 };
 

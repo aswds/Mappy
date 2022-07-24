@@ -1,41 +1,21 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import { View, StyleSheet, Platform, ActivityIndicator } from "react-native";
-import {
-  Feather,
-  Entypo,
-  AntDesign,
-  Ionicons,
-  MaterialCommunityIcons,
-} from "@expo/vector-icons";
-import DirectMessages from "../screens/Chat/DirectMessages";
+import { useNavigationContainerRef } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import BackButton from "../components/appNavigatorComponents/BackButton";
-import { DrawerNavigator } from "./Drawer/DrawerNavigator";
-import {
-  getFocusedRouteNameFromRoute,
-  NavigationContainer,
-  DefaultTheme,
-  DarkTheme,
-  useNavigationContainerRef,
-} from "@react-navigation/native";
-import { useColorScheme } from "react-native";
-import PostCreatingScreen from "../screens/Post/PostCreatingScreen";
-import { PostCreatingNavigator } from "./ProfileNavigation/PostCreatingNavigator";
-import CameraScreen from "../screens/Profile/EditProfile/camera";
-import { useSelector } from "react-redux";
-import { FollowTopTab } from "./ProfileNavigation/FollowTopTab";
-import FollowHeader from "../components/appNavigatorComponents/FollowHeader";
-import { ChatNavigator } from "./Chat/ChatNavigator";
-import Chat from "../screens/Chat/Chat";
-import { ChatHeader } from "../components/Chat/ChatHeader";
-import IntroSlider from "./introNav/IntroSlider";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { StyleSheet } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import ThemeProvider, { useTheme } from "../Theme/ThemeProvider";
-import ThemeWrapper from "../Theme/ThemeWraper";
-import EditAbout from "../screens/Profile/ProfileTabScreens/EditAbout";
+import { useSelector } from "react-redux";
+import FollowHeader from "../components/appNavigatorComponents/FollowHeader";
+import { ChatHeader } from "../components/Chat/ChatHeader";
+import Chat from "../screens/Chat/Chat";
+import CameraScreen from "../screens/Profile/EditProfile/camera";
 import EditProfile from "../screens/Profile/EditProfile/EditProfile";
+import EditAbout from "../screens/Profile/ProfileTabScreens/EditAbout";
+import { useTheme } from "../Theme/ThemeProvider";
+import { ChatNavigator } from "./Chat/ChatNavigator";
+import { DrawerNavigator } from "./Drawer/DrawerNavigator";
+import { FollowTopTab } from "./ProfileNavigation/FollowTopTab";
+import { PostCreatingNavigator } from "./ProfileNavigation/PostCreatingNavigator";
 const bottomIconSize = 8;
 const Stack = createNativeStackNavigator();
 export const AppNavigator = (props) => {

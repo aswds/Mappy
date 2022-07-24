@@ -27,7 +27,7 @@ import WhiteButton from "../../components/headerComponents/whiteButton";
 import { fetchUser, fetchUserFollowing } from "../../redux/actions";
 import { noPostStyles } from "../../styles/noPostStyles";
 import { useTheme } from "../../Theme/ThemeProvider";
-import { RenderPosts } from "../Profile/RenderPost";
+import { RenderPosts } from "../Profile/Render_Post_Item/RenderPost";
 import { fetchUserPage } from "./FetchUserFuncs/fetchUserPage";
 // import { fetchUserPageFollowers } from "./FetchUserFuncs/fetchUserPageFollowers";
 // import { fetchUserPageFollowing } from "./FetchUserFuncs/fetchUserPageFollowing";
@@ -136,7 +136,7 @@ const UserPageListHeader = (props) => {
       });
   }
   return (
-    <SafeAreaView style={styles.containerSafeArea} pointerEvents="box-none">
+    <View style={styles.containerSafeArea} pointerEvents="box-none">
       <StatusBar barStyle="light-content" />
       <TouchableOpacity
         onPress={() => {
@@ -306,7 +306,7 @@ const UserPageListHeader = (props) => {
           </View>
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -321,7 +321,7 @@ const makeStyles = (colors: any, theme) =>
       width: actuatedNormalize(60),
       position: "absolute",
       top:
-        Platform.OS === "ios" ? actuatedNormalize(50) : actuatedNormalize(10),
+        Platform.OS === "ios" ? actuatedNormalize(20) : actuatedNormalize(10),
       left: actuatedNormalize(10),
       zIndex: 1,
     },

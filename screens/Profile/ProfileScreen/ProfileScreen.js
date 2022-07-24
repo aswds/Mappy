@@ -8,23 +8,24 @@ import {
   RefreshControl,
   StyleSheet,
   TouchableOpacity,
+  SafeAreaView,
 } from "react-native";
 import { MaterialTabBar, Tabs } from "react-native-collapsible-tab-view";
 import * as Progress from "react-native-progress";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { connect, useSelector } from "react-redux";
 import { bindActionCreators } from "redux";
-import { actuatedNormalize } from "../../components/actuaterNormalize";
+import { actuatedNormalize } from "../../../components/actuaterNormalize";
 import {
   fetchUser,
   fetchUserFollowers,
   fetchUserFollowing,
   fetchUserPosts,
-} from "../../redux/actions";
-import { useTheme } from "../../Theme/ThemeProvider";
+} from "../../../redux/actions";
+import { useTheme } from "../../../Theme/ThemeProvider";
 import ProfileListHeader from "./ProfileListHeader";
-import { About } from "./ProfileTabScreens/About";
-import { RenderPosts } from "./RenderPost";
+import { About } from "../ProfileTabScreens/About";
+import { RenderPosts } from "../Render_Post_Item/RenderPost";
 const ProfileScreen = (props) => {
   const [refresh, setRefresh] = useState(false);
   const { theme } = useTheme();
@@ -45,7 +46,7 @@ const ProfileScreen = (props) => {
     }, 1500);
   };
   return (
-    <>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <Tabs.Container
         HeaderComponent={ProfileListHeader}
         headerContainerStyle={{}}
@@ -54,7 +55,6 @@ const ProfileScreen = (props) => {
             {...props}
             style={{
               backgroundColor: colors.background,
-              paddingTop: insets.top,
             }}
             activeColor={colors.text}
             inactiveColor="grey"
@@ -112,7 +112,7 @@ const ProfileScreen = (props) => {
           height={2}
         />
       ) : null}
-    </>
+    </SafeAreaView>
   );
 };
 const makeStyles = (colors: any, theme) =>

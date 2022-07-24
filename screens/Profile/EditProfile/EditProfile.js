@@ -35,10 +35,19 @@ import { freeUsername } from "./freeUsername";
 import { useTheme } from "../../../Theme/ThemeProvider";
 import { Field } from "./components/Field";
 import { Buttons } from "./components/Buttons";
-const EditProfile = (props) => {
+import CountryPicker, {
+  DARK_THEME,
+  DEFAULT_THEME,
+} from "react-native-country-picker-modal";
+// fix contry picker problem
+function EditProfile(props) {
   const navigation = useNavigation();
   const { theme } = useTheme();
-
+  const onSelect = (country: any) => {
+    setWidth("25%");
+    setCountryCode(country.cca2);
+    setCountry(country);
+  };
   const colors = theme.colors;
   const route = useRoute();
   const [valid, setValid] = useState({
@@ -46,38 +55,10 @@ const EditProfile = (props) => {
     validPassword: true,
     validEmail: true,
   });
-  useEffect(async () => {
-    await props.fetchUser();
-    Image.prefetch(route.params?.profileImage);
+
+  useEffect(() => {
+    props.fetchUser();
   }, []);
-
-  if (props.currentUser == undefined) {
-    return (
-      <View style={{ flex: 1 }}>
-        <LottieAnimation />
-      </View>
-    );
-  }
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      maxWidth: 500,
-      maxHeight: 500,
-      quality: 0.5,
-    });
-
-    if (!result.cancelled) {
-      setImage(result.uri);
-    }
-  };
-  const hideModal = () => {
-    setShowModal(!showModal);
-  };
-  const showModalHandle = () => {
-    setShowModal(true);
-  };
   useEffect(() => {
     (async () => {
       if (Platform.OS !== "web") {
@@ -90,36 +71,66 @@ const EditProfile = (props) => {
     })();
   }, []);
 
+  const hideModal = () => {
+    setShowModal(!showModal);
+  };
+  const showModalHandle = () => {
+    setShowModal(true);
+  };
+
   const checkOnChange = (phoneNumber, country, city, username, imageUri) => {
     if (
       phoneNumber == phoneNumber &&
       country == country &&
       city == city &&
       username == username &&
-      imageUri == profileImage
+      imageUri == propImage
     ) {
       navigation.goBack();
     } else {
-      uploadImage(image), updateProfile(phoneNumber, country, city, username);
+      uploadImage(propImage),
+        updateProfile(phoneNumber, country, city, username);
     }
   };
   const imagePropHandler = (imageProp) => {
-    setImage(imageProp);
+    setPropImage(imageProp);
   };
+  if (props.currentUser == undefined) {
+    return (
+      <View style={{ flex: 1 }}>
+        <LottieAnimation />
+      </View>
+    );
+  }
+  useEffect(() => {
+    if (route.params?.imageURI != undefined) {
+      setPropImage(route.params?.imageURI);
+    }
+  }, [route.params?.imageURI]);
+  if (choosenImage != undefined) {
+    setPropImage(choosenImage);
+  }
   const iconColorAndUserInput = colors.text;
   const placeholderColor = "#616161";
-  const profileImage = route.params?.profileImage;
-
+  const choosenImage = route.params?.imageURI;
   const [gmail, setGamil] = useState(props.currentUser.email);
   const [username, setUsername] = useState(props.currentUser.username);
-  const [country, setCountry] = useState(props.currentUser.country);
+  const [country, setCountry] = useState(null);
+  const [countryCode, setCountryCode] = useState("");
+  const [width, setWidth] = useState();
   const [city, setCity] = useState(props.currentUser.city);
   const [phoneNumber, setPhoneNumber] = useState(props.currentUser.phoneNumber);
   const [showModal, setShowModal] = useState(false);
-  const [image, setImage] = useState(profileImage);
+  const [propImage, setPropImage] = useState();
   const [name, setName] = useState(props.currentUser.name);
   const [secondName, setSecondName] = useState();
-  const styles = makeStyles(colors, theme);
+  const [withCountryNameButton, setWithCountryNameButton] = useState(false);
+  const [withFlag, setWithFlag] = useState(true);
+  const [withEmoji, setWithEmoji] = useState(true);
+  const [withFilter, setWithFilter] = useState(true);
+  const [withAlphaFilter, setWithAlphaFilter] = useState(false);
+  const [withCallingCode, setWithCallingCode] = useState(false);
+  const styles = makeStyles(colors, theme, width);
   const insets = useSafeAreaInsets();
   return (
     <KeyboardAvoidingView
@@ -152,23 +163,24 @@ const EditProfile = (props) => {
                   ...styles.pictureContainer,
                   alignSelf: "flex-start",
                 }}
-                onPress={() => {
-                  showModalHandle();
-                }}
+                onPress={showModalHandle}
               >
                 <View
                   style={{
                     flex: 1,
                   }}
                 >
-                  <Image
-                    source={
-                      route.params?.profileImage
-                        ? { uri: route.params?.profileImage }
-                        : require("../../../src/image/logoAuth.png")
-                    }
-                    style={styles.imageStyle}
-                  />
+                  {propImage !== undefined ? (
+                    <Image
+                      source={{ uri: propImage }}
+                      style={styles.imageStyle}
+                    />
+                  ) : (
+                    <CachedImage
+                      uri={route.params.profileImage}
+                      style={styles.imageStyle}
+                    />
+                  )}
                 </View>
                 <View
                   style={{
@@ -256,11 +268,26 @@ const EditProfile = (props) => {
                     color={iconColorAndUserInput}
                   />
                 </View>
+                <View style={styles.phonePickerContainer}>
+                  <CountryPicker
+                    theme={theme.dark ? DARK_THEME : DEFAULT_THEME}
+                    containerButtonStyle={{}}
+                    countryCode={countryCode}
+                    withCallingCodeButton
+                    withAlphaFilter
+                    withFlagButton={false}
+                    onSelect={onSelect}
+                  />
+                </View>
                 <TextInput
                   keyboardType="phone-pad"
                   placeholder="Phone number"
                   placeholderTextColor={placeholderColor}
-                  style={styles.textInputStyle}
+                  style={{
+                    ...styles.textInputStyle,
+                    fontSize: 15,
+                    fontWeight: "bold",
+                  }}
                   onChangeText={(text) => {
                     setPhoneNumber(text);
                   }}
@@ -293,15 +320,23 @@ const EditProfile = (props) => {
                     color={iconColorAndUserInput}
                   />
                 </View>
-                <TextInput
-                  placeholder="Country"
-                  placeholderTextColor={placeholderColor}
-                  style={styles.textInputStyle}
-                  onChangeText={(text) => {
-                    setCountry(text);
-                  }}
-                  defaultValue={country}
-                />
+                <View style={{ justifyContent: "center" }}>
+                  <CountryPicker
+                    theme={theme.dark ? DARK_THEME : DEFAULT_THEME}
+                    containerButtonStyle={styles.pickerStyle}
+                    countryCode={countryCode}
+                    withCountryNameButton
+                    withCloseButton
+                    onSelect={onSelect}
+                    {...{
+                      withFilter,
+                      withFlag,
+                      withAlphaFilter,
+                      withCallingCode,
+                      withEmoji,
+                    }}
+                  />
+                </View>
               </Field>
               <Field text="City">
                 <View style={styles.userInputIcon}>
@@ -337,9 +372,15 @@ const EditProfile = (props) => {
                   text={"Save"}
                   textStyle={styles.textStyle}
                   onPress={() => {
-                    checkOnChange(phoneNumber, country, city, username, image);
+                    checkOnChange(
+                      phoneNumber,
+                      country,
+                      city,
+                      username,
+                      propImage
+                    );
                     navigation.navigate("ProfileScreen", {
-                      imageURI: image,
+                      imageURI: propImage,
                     });
                   }}
                 />
@@ -356,9 +397,9 @@ const EditProfile = (props) => {
       </SafeAreaView>
     </KeyboardAvoidingView>
   );
-};
+}
 
-const makeStyles = (colors: any, theme) =>
+const makeStyles = (colors: any, theme, width) =>
   StyleSheet.create({
     container: {
       flex: 1,
@@ -391,6 +432,29 @@ const makeStyles = (colors: any, theme) =>
       borderRadius: 10,
       width: "90%",
       borderBottomWidth: 2,
+    },
+    textInputStyle: {
+      width: "100%",
+      height: "100%",
+      padding: 10,
+      borderRadius: 10,
+      color: colors.text,
+    },
+    phonePickerContainer: {
+      width: width,
+      flexDirection: "row",
+      height: "100%",
+      alignItems: "center",
+      justifyContent: "flex-start",
+      paddingHorizontal: 10,
+    },
+    phonePickerStyle: {},
+    pickerStyle: {
+      width: Dimensions.get("window").width / 1.3,
+      alignContent: "space-between",
+      height: "100%",
+      justifyContent: "center",
+      paddingHorizontal: 10,
     },
     safeAreaViewContainer: {
       flex: 1,
@@ -464,13 +528,7 @@ const makeStyles = (colors: any, theme) =>
       shadowRadius: 4,
       elevation: 5,
     },
-    textInputStyle: {
-      width: "80%",
-      height: "100%",
-      padding: 10,
-      borderRadius: 10,
-      color: colors.text,
-    },
+
     buttonsContainer: {
       width: "100%",
       height: 50,

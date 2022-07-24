@@ -33,45 +33,47 @@ const InputBox = (props) => {
     }
   };
   return (
-    <SafeAreaView style={{ backgroundColor: colors.background }}>
-      <View
-        style={{
-          backgroundColor: colors.background,
-        }}
-      >
-        <View style={{ ...styles.mainContainer }}>
-          <TextInput
-            placeholder={"Type a message"}
-            style={{ ...styles.textInput, color: colors.text }}
-            textAlignVertical="center"
-            placeholderTextColor={"lightgrey"}
-            multiline
-            onFocus={props.onKeyboardAppears}
-            value={message}
-            onChangeText={setMessage}
-          />
-          <TouchableOpacity>
-            {!message ? (
-              <MaterialCommunityIcons
-                name="microphone"
+    <KeyboardAvoidingView>
+      <SafeAreaView style={{ backgroundColor: colors.background }}>
+        <View
+          style={{
+            backgroundColor: colors.background,
+          }}
+        >
+          <View style={{ ...styles.mainContainer }}>
+            <TextInput
+              placeholder={"Type a message"}
+              style={{ ...styles.textInput, color: colors.text }}
+              textAlignVertical="center"
+              placeholderTextColor={"lightgrey"}
+              multiline
+              onFocus={props.onKeyboardAppears}
+              value={message}
+              onChangeText={setMessage}
+            />
+            <TouchableOpacity>
+              {!message ? (
+                <MaterialCommunityIcons
+                  name="microphone"
+                  size={28}
+                  color="white"
+                />
+              ) : (
+                <MaterialIcons name="send" size={28} color="white" />
+              )}
+            </TouchableOpacity>
+            {!message && (
+              <MaterialIcons
+                name="insert-photo"
                 size={28}
                 color="white"
+                style={{ marginHorizontal: 5 }}
               />
-            ) : (
-              <MaterialIcons name="send" size={28} color="white" />
             )}
-          </TouchableOpacity>
-          {!message && (
-            <MaterialIcons
-              name="insert-photo"
-              size={28}
-              color="white"
-              style={{ marginHorizontal: 5 }}
-            />
-          )}
+          </View>
         </View>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 const styles = StyleSheet.create({

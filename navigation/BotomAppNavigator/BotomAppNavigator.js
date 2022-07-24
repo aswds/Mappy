@@ -1,23 +1,19 @@
-import { HomeNavigator } from "../HomeNavigator/HomeNavigator";
-import { View, StyleSheet } from "react-native";
 import {
-  Feather,
-  Entypo,
   AntDesign,
+  Feather,
   Ionicons,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import MapScreen from "../../screens/Map/MapScreen";
-import { ProfileNavigator } from "../ProfileNavigation/ProfileNavigator";
-import SearchScreen from "../../screens/Search/SearchScreen";
-import { SearchNavigator } from "../SearchNavigator/SearchNavigator";
-import HomeScreen from "../../screens/Home/HomeScreen";
-import { NotificationNavigator } from "../Notification/NotificationNavigator";
-import NotificationScreen from "../../screens/Chat/NotificationScreen";
-useTheme;
+import { StyleSheet, View } from "react-native";
 import ChatButton from "../../components/notificationNav/headerRightChat";
+import NotificationScreen from "../../screens/Chat/NotificationScreen";
+import MapScreen from "../../screens/Map/MapScreen";
 import { useTheme } from "../../Theme/ThemeProvider";
+import { HomeNavigator } from "../HomeNavigator/HomeNavigator";
+import { ProfileNavigator } from "../ProfileNavigation/ProfileNavigator";
+import { SearchNavigator } from "../SearchNavigator/SearchNavigator";
+useTheme;
 const bottomIconSize = 8;
 const BottomTab = createBottomTabNavigator();
 export const BottomAppNavigator = (props) => {
@@ -33,6 +29,7 @@ export const BottomAppNavigator = (props) => {
         tabBarShowLabel: false,
         tabBarStyle: {
           backgroundColor: theme.dark ? "black" : colors.primary,
+          borderTopWidth: 0,
         },
         headerBackTitleVisible: false,
       }}

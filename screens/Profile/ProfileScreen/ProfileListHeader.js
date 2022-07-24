@@ -6,6 +6,7 @@ import {
   Dimensions,
   Image,
   Platform,
+  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -15,15 +16,15 @@ import { Image as CachedImage } from "react-native-expo-image-cache";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { connect, useSelector } from "react-redux";
 import { bindActionCreators } from "redux";
-import { actuatedNormalize } from "../../components/actuaterNormalize";
-import WhiteButton from "../../components/headerComponents/whiteButton";
+import { actuatedNormalize } from "../../../components/actuaterNormalize";
+import WhiteButton from "../../../components/headerComponents/whiteButton";
 import {
   fetchUser,
   fetchUserFollowers,
   fetchUserFollowing,
   fetchUserPosts,
-} from "../../redux/actions";
-import { useTheme } from "../../Theme/ThemeProvider";
+} from "../../../redux/actions";
+import { useTheme } from "../../../Theme/ThemeProvider";
 const ProfileScreen = (props) => {
   const { theme } = useTheme();
   const colors = theme.colors;
@@ -65,11 +66,16 @@ const ProfileScreen = (props) => {
   }
 
   return (
-    <View style={{ flex: 1 }} pointerEvents="box-none">
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: colors.background,
+      }}
+      pointerEvents="box-none"
+    >
       <View
         style={{
           ...styles.profileInfoContainer,
-          paddingTop: insets.top,
         }}
         pointerEvents="box-none"
       >
@@ -80,7 +86,7 @@ const ProfileScreen = (props) => {
                 source={
                   cameraImage
                     ? { uri: cameraImage }
-                    : require("../../src/image/logoAuth.png")
+                    : require("../../../src/image/logoAuth.png")
                 }
                 style={styles.image}
               />
@@ -123,7 +129,7 @@ const ProfileScreen = (props) => {
           pointerEvents="none"
         >
           <Text style={{ color: colors.text }}>
-            Nigga Nigga Nigga Nigga Nigga Nigga Nigga Nigga Nigga
+            {props.currentUser.caption}
           </Text>
         </View>
         <View style={styles.followContainer} pointerEvents="box-none">
@@ -260,6 +266,7 @@ const makeStyles = (colors: any, theme) =>
       alignItems: "center",
       width: "50%",
       height: "20%",
+      marginBottom: "5%",
       justifyContent: "center",
     },
     whiteButton: {

@@ -22,6 +22,7 @@ const makeStyles = (colors: any, theme: any) =>
   StyleSheet.create({
     container: {
       flex: 1,
+      justifyContent: "center",
       backgroundColor: colors.background,
     },
   });

@@ -33,9 +33,7 @@ export const ModalPhoto = (props) => {
   return (
     <Modal animationType="slide" transparent={true} visible={props.showModal}>
       <TouchableWithoutFeedback
-        onPress={() => {
-          props.hideModal();
-        }}
+        onPress={props.hideModal}
         style={{ height: "100%", width: "100%" }}
       >
         <View style={{ ...styles.centeredView }}>

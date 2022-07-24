@@ -1,12 +1,12 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { RefreshControl, StyleSheet } from "react-native";
+import { RefreshControl, SafeAreaView, StyleSheet } from "react-native";
 import { MaterialTabBar, Tabs } from "react-native-collapsible-tab-view";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { actuatedNormalize } from "../../components/actuaterNormalize";
-import RenderPosts from "./RenderPost";
+import RenderPosts from "./Render_Post_Item/RenderPost";
 import { fetchUser, fetchUserFollowing } from "../../redux/actions";
 import { useTheme } from "../../Theme/ThemeProvider";
 import { About } from "./ProfileTabScreens/About";
@@ -39,56 +39,57 @@ const UserPage = (props) => {
     }, 1500);
   };
   return (
-    <Tabs.Container
-      HeaderComponent={UserHeader}
-      headerContainerStyle={{}}
-      TabBarComponent={(props) => (
-        <MaterialTabBar
-          {...props}
-          style={{
-            backgroundColor: colors.background,
-            paddingTop: insets.top,
-          }}
-          activeColor={colors.text}
-          inactiveColor="grey"
-          inactiveOpacity={1}
-          labelStyle={{
-            fontSize: 13,
-            fontFamily: "WorkSans-Bold",
-          }}
-        />
-      )}
-    >
-      {console.log("d")}
-      <Tabs.Tab name="Posts">
-        <Tabs.FlatList
-          style={styles.tabFlatList}
-          data={userPosts}
-          refreshControl={
-            <RefreshControl
-              refreshing={refresh}
-              onRefresh={onRefresh}
-              style={{ justifyContent: "center", alignItems: "center" }}
-              tintColor={colors.text}
-            />
-          }
-          style={styles.tabFlatList}
-          data={userPosts}
-          initialNumToRender={5}
-          removeClippedSubviews
-          legacyImplementation
-          keyExtractor={(item) => item.id}
-          renderItem={renderPosts}
-        />
-      </Tabs.Tab>
-      <Tabs.Tab name="About">
-        <Tabs.ScrollView
-          style={{ flex: 1, backgroundColor: colors.background }}
-        >
-          <About />
-        </Tabs.ScrollView>
-      </Tabs.Tab>
-    </Tabs.Container>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+      <Tabs.Container
+        HeaderComponent={UserHeader}
+        headerContainerStyle={{}}
+        TabBarComponent={(props) => (
+          <MaterialTabBar
+            {...props}
+            style={{
+              backgroundColor: colors.background,
+            }}
+            activeColor={colors.text}
+            inactiveColor="grey"
+            inactiveOpacity={1}
+            labelStyle={{
+              fontSize: 13,
+              fontFamily: "WorkSans-Bold",
+            }}
+          />
+        )}
+      >
+        {console.log("d")}
+        <Tabs.Tab name="Posts">
+          <Tabs.FlatList
+            style={styles.tabFlatList}
+            data={userPosts}
+            refreshControl={
+              <RefreshControl
+                refreshing={refresh}
+                onRefresh={onRefresh}
+                style={{ justifyContent: "center", alignItems: "center" }}
+                tintColor={colors.text}
+              />
+            }
+            style={styles.tabFlatList}
+            data={userPosts}
+            initialNumToRender={5}
+            removeClippedSubviews
+            legacyImplementation
+            keyExtractor={(item) => item.id}
+            renderItem={renderPosts}
+          />
+        </Tabs.Tab>
+        <Tabs.Tab name="About">
+          <Tabs.ScrollView
+            style={{ flex: 1, backgroundColor: colors.background }}
+          >
+            <About />
+          </Tabs.ScrollView>
+        </Tabs.Tab>
+      </Tabs.Container>
+    </SafeAreaView>
   );
 };
 

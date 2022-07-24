@@ -1,11 +1,9 @@
-import { Feather, MaterialIcons } from "@expo/vector-icons";
+import { AntDesign, Feather, MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import firebase from "firebase";
 import React, { useState } from "react";
 import {
-  Alert,
-  Button,
   Dimensions,
   Image,
   Keyboard,
@@ -19,61 +17,86 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import * as Animatable from "react-native-animatable";
-import validator from "validator";
 import { actuatedNormalize } from "../../components/actuaterNormalize";
 import StyledButton from "../../components/button";
 import Line from "../../components/signIn&signUp/line";
+import CustomAlert from "./CustomAlert";
+import SingInMethods from "./LoginComponents/SignInModal";
+import { style } from "./style";
 const LoginScreen = (props) => {
   const navigation = useNavigation();
+
+  async function loginWithFacebook() {
+    //ENTER YOUR APP ID
+    const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync(
+      "381349353861662",
+      { permissions: ["public_profile"] }
+    );
+
+    if (type == "success") {
+      const credential = firebase.auth.FacebookAuthProvider.credential(token);
+
+      firebase
+        .auth()
+        .signInWithCredential(credential)
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }
+  const [email, setEmail] = useState({ isValid: true, errorMsg: "" });
+  const [isLoading, setIsLoading] = useState(false);
+  const [password, setPassword] = useState({ isValid: true, errorMsg: "" });
+  const [errorMsg, setErrorMsg] = useState();
+  const [userPassword, setUserPassword] = useState("");
+  const [userLogin, setUserLogin] = useState("");
+  const [showPassword, setShowPassword] = useState(true);
+  const [_showModal, setShowModal] = useState(false);
+  const [singInModal, setSignInModal] = useState(false);
+
   const signIn = (email, password) => {
     firebase
       .auth()
-      .signInWithEmailAndPassword(email, password)
+      .signInWithEmailAndPassword(email.trim(), password)
       .then((result) => {
         const user = result.user;
         console.log("Logged in with:" + user.email);
       })
       .catch((error) => {
-        setIsValidEmail(false), setIsValidPassword(false);
-        error.message.replace("[Error]", "");
-        Alert.alert(
-          "Check your email/password",
-          "Check if you entered everything correctly!",
-          [],
-          {
-            AlertType: "login-password",
-            cancelable: true,
-          }
-        );
+        console.log(error.code);
+        if (error.code == "auth/invalid-email") {
+          setErrorMsg(
+            "The format of your email address is not correct please enter your correct email address to proceed."
+          ),
+            setEmail(false);
+          setShowModal(true);
+        } else if (error.code == "auth/wrong-password") {
+          setPassword({
+            isValid: false,
+          }),
+            setErrorMsg(
+              "Sorry, you entered the wrong password. Check your password again."
+            ),
+            setShowModal(true);
+        } else if (error.code == "auth/user-not-found") {
+          setErrorMsg(
+            "The email you entered does not belong to the account. Check your username and try again."
+          ),
+            setEmail(false);
+          setShowModal(true);
+        }
       });
   };
-
-  const [isValidEmail, setIsValidEmail] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isValidPassword, setIsValidPassword] = useState(true);
-  const [userPassword, setUserPassword] = useState("");
-  const [userLogin, setUserLogin] = useState("");
-  const [showPassword, setShowPassword] = useState(true);
-
-  const loader = async () => {
-    setIsLoading(true);
-    const timer = await setTimeout(() => setIsLoading(false), 1000);
-    clearTimeout(timer);
-  };
-  const emailValidator = (email) => {
-    if (validator.isEmail(email)) {
-      setIsValidEmail(true);
-    } else {
-      setIsValidEmail(false);
-    }
-  };
   const passwordValidator = (password) => {
-    if (password.length >= 6) {
-      setIsValidPassword(true);
-    } else {
-      setIsValidPassword(false);
+    if (email.isValid || password.length < 6) {
+      console.log("Yee");
     }
+  };
+  const _hideModal = () => {
+    setShowModal(false);
+  };
+  const _hideSignInModal = () => {
+    setSignInModal(false);
   };
 
   return (
@@ -104,8 +127,8 @@ const LoginScreen = (props) => {
                 <View
                   style={{
                     ...styles.userInput,
-                    borderWidth: isValidEmail ? null : 2,
-                    borderColor: isValidEmail ? "black" : "red",
+                    borderWidth: email.isValid ? null : 1,
+                    borderColor: email.isValid ? "black" : "red",
                   }}
                 >
                   <View style={{ marginRight: 10 }}>
@@ -119,30 +142,30 @@ const LoginScreen = (props) => {
                   <TextInput
                     keyboardType="email-address"
                     style={styles.inputField}
+                    placeholderTextColor={style.color}
                     placeholder="E-mail"
                     onChangeText={(email) => {
-                      setUserLogin(email), setIsValidEmail(true);
+                      setUserLogin(email);
+                      // setEmail({ ...email, isValid: true });
                     }}
                     defaultValue={userLogin}
                     autoCapitalize="none"
                   />
                 </View>
-                {isValidEmail ? null : (
+                {/* {email.isValid ? null : (
                   <Animatable.View
                     animation="fadeInLeft"
                     duration={500}
                     style={styles.animationStyle}
                   >
-                    <Text style={styles.errorMsg}>
-                      Enter your email correctly!
-                    </Text>
+                    <Text style={styles.errorMsg}>{email.errorMsg}</Text>
                   </Animatable.View>
-                )}
+                )} */}
                 <View
                   style={{
                     ...styles.userInput,
-                    borderWidth: isValidEmail ? null : 2,
-                    borderColor: isValidPassword ? "black" : "red",
+                    borderWidth: email.isValid ? null : 1,
+                    borderColor: password.isValid ? "black" : "red",
                   }}
                 >
                   {/* Changing Icons */}
@@ -160,66 +183,84 @@ const LoginScreen = (props) => {
                     style={styles.inputField}
                     secureTextEntry={showPassword}
                     placeholder="Password"
+                    placeholderTextColor={style.color}
                     onChangeText={(password) => {
-                      setUserPassword(password), setIsValidPassword(true);
+                      setUserPassword(password), setPassword(true);
                     }}
                     defaultValue={userPassword}
                   />
                 </View>
-                {isValidPassword ? null : (
-                  <Animatable.View
-                    animation="fadeInLeft"
-                    duration={500}
-                    style={styles.animationStyle}
-                  >
-                    <Text style={styles.errorMsg}>
-                      Enter your password correctly!
-                    </Text>
-                  </Animatable.View>
-                )}
+
                 <View style={styles.styledButtonContainer}>
                   <StyledButton
                     onPress={() => {
-                      loader(),
-                        emailValidator(userLogin),
-                        passwordValidator(userPassword);
                       signIn(userLogin, userPassword);
                     }}
-                    style={{ height: actuatedNormalize(45), borderRadius: 15 }}
+                    style={{
+                      height: actuatedNormalize(45),
+                      borderRadius: 5,
+                      flex: 5,
+                    }}
                   >
                     Sign In
                   </StyledButton>
-                  <StyledButton
-                    onPress={() => navigation.navigate("NameInfo")}
-                    style={styles.styledButton}
+                  <TouchableOpacity
+                    onPress={() => {
+                      setSignInModal(true);
+                    }}
+                    style={{
+                      height: actuatedNormalize(45),
+                      borderRadius: 5,
+                      flex: 1,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
                   >
-                    Register
-                  </StyledButton>
+                    {/* add sing in methods */}
+                    <AntDesign name="up" size={28} color="white" />
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>
+            <CustomAlert
+              errorMsg={errorMsg}
+              hideModal={_hideModal}
+              showModal={_showModal}
+            />
           </KeyboardAvoidingView>
 
-          {Platform.OS == "ios" ? (
-            <View style={{ width: "50%" }}>
-              <Button
-                title="Forgot a password?"
-                onPress={() => {
-                  navigation.navigate("DataRecovery");
-                }}
-              />
-            </View>
-          ) : (
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("DataRecovery");
-              }}
-            >
-              <Text style={{ color: "#0e78ea", fontSize: 15 }}>
-                Forgot a password ?
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("DataRecovery");
+            }}
+          >
+            <Text style={{ color: "#0e78ea", fontSize: 15 }}>
+              Forgot a password ?
+            </Text>
+          </TouchableOpacity>
+          <View style={styles.registerContainer}>
+            <View style={style.textTerms}>
+              <Text style={style.textTermsStyle}>
+                Don't have an account yet?{" "}
               </Text>
-            </TouchableOpacity>
-          )}
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("NameInfo");
+                }}
+              >
+                <Text
+                  style={{
+                    ...style.textTermsStyle,
+                    fontSize: 15,
+                    color: "cornflowerblue",
+                  }}
+                >
+                  Register
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          <SingInMethods hideModal={_hideSignInModal} showModal={singInModal} />
         </ScrollView>
       </TouchableWithoutFeedback>
     </LinearGradient>
@@ -231,6 +272,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    alignContent: "center",
+  },
+  registerContainer: {
+    alignItems: "center",
+    justifyContent: "center",
   },
   errorMsg: {
     color: "red",
@@ -296,12 +342,16 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     width: Dimensions.get("window").width / 1.6,
     height: 20,
+    marginVertical: 5,
   },
   styledButtonContainer: {
     alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
     borderRadius: 10,
     alignSelf: "center",
-    padding: 30,
+    paddingVertical: 30,
+    width: Dimensions.get("window").width / 1.5,
   },
   styledButton: {
     height: actuatedNormalize(50),

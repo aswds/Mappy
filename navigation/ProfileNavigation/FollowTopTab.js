@@ -1,9 +1,9 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import { useRoute } from "@react-navigation/native";
 import Followers from "../../screens/Profile/Followers";
 import Following from "../../screens/Profile/Following";
-const MyFollowTopTab = createMaterialTopTabNavigator();
-import { useRoute } from "@react-navigation/native";
 import { useTheme } from "../../Theme/ThemeProvider";
+const MyFollowTopTab = createMaterialTopTabNavigator();
 export const FollowTopTab = (props) => {
   const route = useRoute();
   const { theme } = useTheme();

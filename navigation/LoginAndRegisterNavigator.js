@@ -1,21 +1,18 @@
-import React from "react";
-import DataRecovery from "../screens/recovery/Data";
-import LoginScreen from "../screens/Loging&Register/Login";
-import RegisterScreen from "../screens/Loging&Register/Register";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {
-  DarkTheme,
   NavigationContainer,
-  useNavigation,
   useNavigationContainerRef,
   useTheme,
 } from "@react-navigation/native";
-import { NameModal } from "../screens/Loging&Register/NameModal";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import React from "react";
 import { theme } from "../components/theme";
 import { AvatarChoose } from "../screens/Loging&Register/AvatarChoose";
+import LoginScreen from "../screens/Loging&Register/Login";
+import { NameModal } from "../screens/Loging&Register/NameModal";
 import { PasswordRules } from "../screens/Loging&Register/PasswordRules";
-import BackButton from "../components/appNavigatorComponents/BackButton";
+import RegisterScreen from "../screens/Loging&Register/Register";
 import CameraScreen from "../screens/Profile/EditProfile/camera";
+import DataRecovery from "../screens/recovery/Data";
 const Stack = createNativeStackNavigator();
 
 export const LoginAndRegister = (props) => {

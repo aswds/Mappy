@@ -20,7 +20,6 @@ export default function ImageBrowserScreen(props) {
   const onSuccess = (data: Asset[]) => {
     navigation.navigate("Description", { photos: data });
   };
-
   const widgetErrors = useMemo(
     () => ({
       errorTextColor: "black",
@@ -50,7 +49,7 @@ export default function ImageBrowserScreen(props) {
   const widgetResize = useMemo(
     () => ({
       width: 200,
-      compress: 0.5,
+      compress: 0,
       base64: false,
       saveTo: "jpeg",
     }),

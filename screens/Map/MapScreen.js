@@ -1,4 +1,8 @@
-import { AntDesign, FontAwesome5 } from "@expo/vector-icons";
+import {
+  AntDesign,
+  FontAwesome5,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import * as Location from "expo-location";
 import React, { useEffect, useState } from "react";
@@ -17,6 +21,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { mapDarkStyle } from "../../components/mapDarkStyle";
 import { fetchUser } from "../../redux/actions";
+import TopModal from "./TopModal";
 
 const MainScreen = (props) => {
   const [marker, setMarker] = useState();
@@ -25,6 +30,7 @@ const MainScreen = (props) => {
     latitude: 0,
     longitude: 10,
   });
+  const [showModal, setShowModal] = useState(false);
   useEffect(() => {
     async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -41,7 +47,9 @@ const MainScreen = (props) => {
       });
     };
   }, []);
-
+  const _hideModal = () => {
+    setShowModal(false);
+  };
   return (
     <View style={styles.container}>
       <MapView
@@ -79,7 +87,7 @@ const MainScreen = (props) => {
         >
           <Callout></Callout>
         </Marker> */}
-      <Callout>
+      <Callout style={{ backgroundColor: "yellow" }}>
         <SafeAreaView>
           <View style={styles.calloutView}>
             {searchAnimation ? (
@@ -149,6 +157,20 @@ const MainScreen = (props) => {
           </View>
         </SafeAreaView>
       </Callout>
+      <Callout style={{ backgroundColor: "red", right: 0, top: "20%" }}>
+        <TouchableOpacity
+          style={{
+            ...styles.calloutSearch,
+            alignSelf: "flex-end",
+            height: 55,
+            width: 55,
+            marginVertical: "10%",
+          }}
+        >
+          <MaterialCommunityIcons name="map-marker-up" size={40} />
+        </TouchableOpacity>
+      </Callout>
+      <TopModal showModal={showModal} hideModal={_hideModal} />
     </View>
   );
 };

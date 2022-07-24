@@ -72,7 +72,6 @@ export default function App(props) {
     <ThemeProvider>
       <ThemeWrapper>
         <StatusBar barStyle={!theme.dark ? "light-content" : "dark-content"} />
-
         <Provider store={store}>
           <NavigationContainer>
             <AppNavigator />
