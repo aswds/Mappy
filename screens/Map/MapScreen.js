@@ -16,13 +16,12 @@ import {
 } from "react-native";
 import * as Animatable from "react-native-animatable";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import MapView, { Callout, PROVIDER_GOOGLE } from "react-native-maps";
+import MapView, { Callout, PROVIDER_GOOGLE, Geojson } from "react-native-maps";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { mapDarkStyle } from "../../components/mapDarkStyle";
 import { fetchUser } from "../../redux/actions";
-import TopModal from "./TopModal";
-
+import TopModal from "./components/TopModal";
 const MainScreen = (props) => {
   const [marker, setMarker] = useState();
   const [searchAnimation, setSearchAnimation] = useState();
@@ -30,6 +29,7 @@ const MainScreen = (props) => {
     latitude: 0,
     longitude: 10,
   });
+  const myPlace = require("../../src/geoJSON/country.json");
   const [showModal, setShowModal] = useState(false);
   useEffect(() => {
     async () => {
@@ -57,7 +57,7 @@ const MainScreen = (props) => {
         showsMyLocationButton={true}
         showsUserLocation={true}
         mapType="standard"
-        style={StyleSheet.absoluteFillObject}
+        style={[StyleSheet.absoluteFillObject, { alignItems: "flex-end" }]}
         provider={PROVIDER_GOOGLE}
         region={
           position.latitude && position.longitude
@@ -77,7 +77,9 @@ const MainScreen = (props) => {
               )
             : "";
         }}
-      ></MapView>
+      >
+        <Geojson geojson={myPlace} strokeColor="green" strokeWidth={2} />
+      </MapView>
       {/* <Marker
           key={markers.name}
           coordinate={{
@@ -87,14 +89,14 @@ const MainScreen = (props) => {
         >
           <Callout></Callout>
         </Marker> */}
-      <Callout style={{ backgroundColor: "yellow" }}>
+      <Callout style={{ backgroundColor: "blue" }}>
         <SafeAreaView>
           <View style={styles.calloutView}>
             {searchAnimation ? (
               <View style={styles.animationSearchContainer}>
                 <Animatable.View
                   animation={"bounceInRight"}
-                  duration={1000}
+                  duration={800}
                   style={{ width: "100%" }}
                 >
                   <GooglePlacesAutocomplete
@@ -122,7 +124,7 @@ const MainScreen = (props) => {
                 </Animatable.View>
                 <Animatable.View
                   animation={"fadeIn"}
-                  duration={1000}
+                  duration={900}
                   style={{ width: "100%" }}
                 >
                   <TouchableOpacity
@@ -166,6 +168,7 @@ const MainScreen = (props) => {
             width: 55,
             marginVertical: "10%",
           }}
+          onPress={() => setShowModal(true)}
         >
           <MaterialCommunityIcons name="map-marker-up" size={40} />
         </TouchableOpacity>
@@ -178,11 +181,9 @@ const MainScreen = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: "flex-end",
   },
   rightIconsContainer: {
-    position: "absolute",
-    width: Dimensions.get("window").width / 7,
-    height: Dimensions.get("window").height / 2,
     marginTop: "70%",
     marginRight: 10,
     alignSelf: "flex-end",

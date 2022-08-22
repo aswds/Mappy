@@ -47,6 +47,8 @@ export default function App(props) {
     "Roboto-Regular": require("./assets/fonts/Roboto/Roboto-Regular.ttf"),
     "WorkSans-Bold": require("./assets/fonts/WorkSans/WorkSans-Bold.ttf"),
     "WorkSans-Regular": require("./assets/fonts/WorkSans/WorkSans-Regular.ttf"),
+    "Nunito-Bold": require("./assets/fonts/Nunito/static/Nunito-Bold.ttf"),
+    "Nunito-Regular": require("./assets/fonts/Nunito/static/Nunito-Regular.ttf"),
   });
 
   if (!isLoaded && !themeLoaded) {

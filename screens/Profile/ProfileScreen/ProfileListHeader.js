@@ -115,7 +115,7 @@ const ProfileScreen = (props) => {
                 </TouchableOpacity> */}
             </View>
             <View style={styles.emailContainer}>
-              <Text style={styles.email}>{props.currentUser.email}</Text>
+              <Text style={styles.email}>{props.currentUser.name.trim()}</Text>
             </View>
             <View>
               <Text style={{ fontFamily: "Lato-Regular", color: "grey" }}>

@@ -7,9 +7,11 @@ import {
   Dimensions,
   Text,
   Animated,
+  FlatList,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { PinchGestureHandler } from "react-native-gesture-handler";
+import Item from "./SwiperItem/Item";
 const { width } = Dimensions.get("window");
 
 const Swiper = ({ images }) => {
@@ -37,9 +39,7 @@ const Swiper = ({ images }) => {
         showsHorizontalScrollIndicator={false}
       >
         {images.map((item, index) => (
-          <View style={styles.imageContainer} key={index}>
-            <Animated.Image source={{ uri: item }} style={styles.image} />
-          </View>
+          <Item item={item} id={index} />
         ))}
       </ScrollView>
       <View style={styles.circleContainer}>

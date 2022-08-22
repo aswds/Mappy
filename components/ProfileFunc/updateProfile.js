@@ -1,6 +1,7 @@
 import firebase from "firebase";
 import { Alert } from "react-native";
-const updateProfile = (phoneNumber, country, city, username) => {
+import { trimFunction } from "./trimFunc";
+const updateProfile = (phoneNumber, country, city, username, name, surname) => {
   firebase
     .firestore()
     .collection("users")
@@ -10,8 +11,12 @@ const updateProfile = (phoneNumber, country, city, username) => {
       country: country,
       username: username,
       searchUsername: username.toLowerCase(),
-      phoneNumber: phoneNumber,
+      phoneNumber: trimFunction(phoneNumber),
+      name: trimFunction(name),
+      surname: trimFunction(surname),
     })
-    .then();
+    .then((val) => {
+      console.log(val);
+    });
 };
 export default updateProfile;

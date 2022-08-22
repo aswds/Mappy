@@ -7,87 +7,54 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
+import { actuatedNormalize } from "../../../components/actuaterNormalize";
 import { AppleButton } from "./AppleButton";
+import { SingInType } from "./SingInType";
 const SingInMethods = (props) => {
   const loginWithFacebook = () => {};
   const loginWithGoogle = () => {};
   return (
-    <Modal animationType="slide" transparent={true} visible={props.showModal}>
-      <TouchableWithoutFeedback
-        onPress={() => {
-          props.hideModal();
+    <View style={{ ...styles.centeredView }}>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-evenly",
+          flex: 1,
+          alignItems: "flex-end",
         }}
-        style={{ height: "100%", width: "100%" }}
       >
-        <View style={{ ...styles.centeredView }}>
-          <View
-            style={{
-              ...styles.modalView,
-              justifyContent: "space-around",
-              alignItems: "center",
-              borderWidth: 6,
-              borderColor: "white",
-            }}
-          >
-            <View>
-              <View style={styles.iconContainer}>
-                <FontAwesome.Button
-                  style={styles.iconStyle}
-                  name="facebook"
-                  backgroundColor="#3b5998"
-                  onPress={loginWithFacebook}
-                  size={15}
-                >
-                  <Text style={styles.iconText}>Continue with Facebook</Text>
-                </FontAwesome.Button>
-              </View>
-              <View style={styles.iconContainer}>
-                <FontAwesome.Button
-                  style={styles.iconStyle}
-                  name="google"
-                  backgroundColor="#cc3345"
-                  onPress={loginWithGoogle}
-                  size={15}
-                >
-                  <Text style={styles.iconText}>Continue with Google</Text>
-                </FontAwesome.Button>
-              </View>
-              <View style={styles.iconContainer}>
-                <AppleButton />
-              </View>
-              <View style={styles.iconContainer}>
-                <FontAwesome.Button
-                  style={styles.iconStyle}
-                  name="mobile-phone"
-                  backgroundColor="grey"
-                  onPress={loginWithGoogle}
-                >
-                  <Text style={styles.iconText}>Continue with Phone</Text>
-                </FontAwesome.Button>
-              </View>
-            </View>
-          </View>
-        </View>
-      </TouchableWithoutFeedback>
-    </Modal>
+        <SingInType size={30} name="facebook" />
+
+        <SingInType
+          size={40}
+          name="apple"
+          style={{
+            height: actuatedNormalize(53),
+            width: actuatedNormalize(76),
+          }}
+        />
+        <SingInType size={30} name="google" />
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   centeredView: {
-    flex: 1,
-    justifyContent: "flex-end",
     alignItems: "center",
+    flexDirection: "row",
   },
   iconStyle: {
+    borderWidth: 2,
+    borderColor: "white",
     alignItems: "center",
-    width: 250,
-    height: 40,
+    width: "100%",
+    height: "100%",
     justifyContent: "center",
-    padding: 10,
   },
   iconContainer: {
-    margin: 10,
+    width: 70,
+    height: 50,
   },
   iconText: { fontWeight: "bold", color: "white" },
   containerSafeArea: {

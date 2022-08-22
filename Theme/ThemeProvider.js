@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { View, StyleSheet } from "react-native";
-import { DarkTheme } from "@react-navigation/native";
-import { theme as DefaultTheme } from "../components/theme";
+// import { DarkTheme } from "@react-navigation/native";
+import { DarkTheme, theme as DefaultTheme } from "../components/theme";
 const ThemeContext = createContext();
 
 const ThemeProvider = ({ children }) => {

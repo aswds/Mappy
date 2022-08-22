@@ -18,7 +18,13 @@ const ForceInset = {
 export default function ImageBrowserScreen(props) {
   const navigation = useNavigation();
   const onSuccess = (data: Asset[]) => {
-    navigation.navigate("Description", { photos: data });
+    const db = data;
+    let i = 0;
+    db.forEach((item) => {
+      i += 1;
+      item.id = i;
+    });
+    navigation.navigate("Description", { photos: db });
   };
   const widgetErrors = useMemo(
     () => ({
@@ -39,7 +45,7 @@ export default function ImageBrowserScreen(props) {
       initialLoad: 100,
       assetsType: [MediaType.photo, MediaType.video],
       minSelection: 1,
-      maxSelection: 5,
+      maxSelection: 7,
       portraitCols: 5,
       landscapeCols: 5,
     }),
@@ -48,8 +54,8 @@ export default function ImageBrowserScreen(props) {
 
   const widgetResize = useMemo(
     () => ({
-      width: 200,
-      compress: 0,
+      width: 1080,
+      compress: 0.5,
       base64: false,
       saveTo: "jpeg",
     }),

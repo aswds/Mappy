@@ -32,7 +32,7 @@ const makeStyles = (colors: any, theme: any) => {
     inputField: {
       flexDirection: "column",
       height: 70,
-      marginBottom: 20,
+      marginBottom: "10%",
       width: "100%",
       borderColor: theme.dark ? "#a3a3a3" : colors.border,
     },
@@ -41,7 +41,7 @@ const makeStyles = (colors: any, theme: any) => {
       width: "100%",
       borderBottomWidth: 2,
       borderColor: colors.border,
-      marginVertical: 10,
+      marginVertical: "1%",
     },
   });
 };

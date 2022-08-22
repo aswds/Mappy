@@ -28,8 +28,8 @@ const styles = StyleSheet.create({
     height: Dimensions.get("window").height / 17,
     borderRadius: 50,
     overflow: "hidden",
-    backgroundColor: "white",
-    borderWidth: 2,
+    backgroundColor: "#13294B",
+    borderWidth: 0,
   },
   linearGradient: {
     flex: 1,

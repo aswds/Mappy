@@ -54,6 +54,7 @@ const PostCreatingScreen = (props) => {
 
   const locationData = route.params?.location;
   const rateBackground = "rgba(219,219,219,0.6)";
+  const iconColor = theme.dark ? colors.background : "black";
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ flex: 1 }}>
       <StatusBar barStyle="light-content" />
@@ -171,7 +172,7 @@ const PostCreatingScreen = (props) => {
               <MaterialCommunityIcons
                 name="emoticon-excited-outline"
                 size={35}
-                color={colors.background}
+                color={iconColor}
               />
             }
           />
@@ -182,7 +183,7 @@ const PostCreatingScreen = (props) => {
               <MaterialCommunityIcons
                 name="emoticon-happy-outline"
                 size={35}
-                color={colors.background}
+                color={iconColor}
               />
             }
           />
@@ -193,7 +194,7 @@ const PostCreatingScreen = (props) => {
               <MaterialCommunityIcons
                 name="emoticon-neutral-outline"
                 size={35}
-                color={colors.background}
+                color={iconColor}
               />
             }
           />
@@ -204,7 +205,7 @@ const PostCreatingScreen = (props) => {
               <MaterialCommunityIcons
                 name="emoticon-confused-outline"
                 size={35}
-                color={colors.background}
+                color={iconColor}
               />
             }
           />
@@ -215,7 +216,7 @@ const PostCreatingScreen = (props) => {
               <MaterialCommunityIcons
                 name="emoticon-sad-outline"
                 size={35}
-                color={colors.background}
+                color={iconColor}
               />
             }
           />
@@ -233,13 +234,14 @@ const PostCreatingScreen = (props) => {
           <View
             style={{
               marginTop: 20,
-              borderBottomColor: "#E3E3E3",
+              borderBottomColor: theme.dark ? "#E3E3E3" : "black",
               borderBottomWidth: 2,
+              maxHeight: "60%",
             }}
           >
             <TextInput
-              onFocus={() => setInputHeight(45)}
-              onEndEditing={() => setInputHeight(null)}
+              // onFocus={() => setInputHeight(45)}
+              // onEndEditing={() => setInputHeight(null)}
               onChangeText={setRateCaption}
               placeholder="Write here"
               placeholderTextColor={"#7E7E7E"}

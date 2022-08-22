@@ -7,7 +7,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
 import { theme } from "../components/theme";
 import { AvatarChoose } from "../screens/Loging&Register/AvatarChoose";
-import LoginScreen from "../screens/Loging&Register/Login";
+import LoginScreen from "../screens/Loging&Register/Login/Login";
 import { NameModal } from "../screens/Loging&Register/NameModal";
 import { PasswordRules } from "../screens/Loging&Register/PasswordRules";
 import RegisterScreen from "../screens/Loging&Register/Register";

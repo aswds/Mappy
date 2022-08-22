@@ -9,6 +9,7 @@ import {
   ScrollView,
   Button,
   TouchableWithoutFeedback,
+  Platform,
 } from "react-native";
 import { colors } from "react-native-elements";
 import { SliderBox } from "react-native-image-slider-box";
@@ -18,22 +19,20 @@ import { EvilIcons } from "@expo/vector-icons";
 import { actuatedNormalize } from "../../../components/actuaterNormalize";
 import PostModal from "./PostModal";
 import { useNavigation } from "@react-navigation/native";
+import ShareModal from "./ShareModal";
+import moment from "moment";
 export const RenderPosts = ({ item }) => {
   const [showModal, setShowModal] = useState(false);
   const [caption, setCaption] = useState({ height: "30%", width: "50%" });
   const [captionIsOpened, setCaptionIsOpened] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
   const { theme } = useTheme();
   const colors = theme.colors;
   const styles = makeStyles(colors);
   const navigation = useNavigation();
   const convertTimestamp = (timestamp) => {
     if (timestamp) {
-      const date = timestamp.toDate().toLocaleTimeString("default", {
-        day: "2-digit",
-        month: "long",
-        hour: "2-digit",
-        minute: "2-digit",
-      });
+      const date = moment(timestamp.toDate()).format("lll");
       return date;
     }
   };
@@ -44,7 +43,12 @@ export const RenderPosts = ({ item }) => {
     time: convertTimestamp(item.creation),
     rate: item.rate,
     rateCaption: item.rateCaption,
+    location: item.location,
   };
+  const _hideShareModal = () => {
+    setShowShareModal(false);
+  };
+
   const _hideModal = () => {
     setShowModal(false);
   };
@@ -63,7 +67,6 @@ export const RenderPosts = ({ item }) => {
           },
         ]}
       >
-        {console.log(item)}
         <View style={styles.titleContainer}>
           <Text style={styles.title}>
             {item.title ? item.title : "Untitled"}
@@ -115,13 +118,7 @@ export const RenderPosts = ({ item }) => {
             maxWidth: "99%",
           }}
         >
-          <Text
-            numberOfLines={1}
-            style={{
-              color: "lightgrey",
-              fontFamily: "WorkSans-Regular",
-            }}
-          >
+          <Text numberOfLines={1} style={styles.textStyle}>
             {item.caption}
           </Text>
         </TouchableOpacity>
@@ -140,12 +137,12 @@ export const RenderPosts = ({ item }) => {
               </TouchableOpacity>
             </View>
             <View style={{}}>
-              <TouchableOpacity style={[styles.postActionIcon]}>
-                {/* <FontAwesome
-                name="share-square-o"
-                size={24}
-                color={colors.text}
-              /> */}
+              <TouchableOpacity
+                style={[styles.postActionIcon]}
+                onPress={() => {
+                  setShowShareModal(true);
+                }}
+              >
                 <Ionicons
                   name="share-social-sharp"
                   size={iconSize}
@@ -156,7 +153,7 @@ export const RenderPosts = ({ item }) => {
           </View>
         </View>
       </TouchableOpacity>
-
+      <ShareModal hideModal={_hideShareModal} showModal={showShareModal} />
       <PostModal hideModal={_hideModal} data={data} showModal={showModal} />
     </>
   );
@@ -166,8 +163,9 @@ const makeStyles = (colors) =>
     post: {
       flex: 1,
       alignItems: "flex-start",
-      marginHorizontal: 20,
+      marginHorizontal: "5%",
     },
+
     locationContainer: {
       marginVertical: 15,
       width: "100%",
@@ -232,6 +230,10 @@ const makeStyles = (colors) =>
       fontSize: 20,
       maxWidth: "60%",
     },
+    textStyle: {
+      color: colors.text,
+      fontFamily: "WorkSans-Regular",
+    },
     postImageSmall: {
       borderColor: colors.text,
       borderWidth: 1,
@@ -268,14 +270,14 @@ const makeStyles = (colors) =>
     postActions: {
       alignSelf: "center",
       width: "100%",
+
       alignItems: "center",
     },
     postActionsView: {
-      display: "flex",
       alignItems: "center",
       justifyContent: "space-between",
       flexDirection: "row",
-      paddingVertical: "1%",
+      paddingVertical: "2%",
       width: "100%",
     },
     postContent: {
@@ -289,7 +291,6 @@ const makeStyles = (colors) =>
       aspectRatio: 1,
       alignItems: "center",
       justifyContent: "center",
-      borderRadius: 100,
     },
   });
 export default RenderPosts;

@@ -1,14 +1,10 @@
 import { Entypo, Feather, Fontisto, MaterialIcons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { BlurView } from "expo-blur";
 import * as ImagePicker from "expo-image-picker";
-import firebase from "firebase";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  Alert,
   Dimensions,
   Image,
-  ImageBackground,
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
@@ -20,25 +16,23 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import WhiteButton from "../../../components/headerComponents/whiteButton";
-import LottieAnimation from "../../../components/lottieAnimation";
-import updateProfile from "../../../components/ProfileFunc/updateProfile";
-import { uploadImage } from "../../../components/ProfileFunc/uploadImage";
-import { fetchUser } from "../../../redux/actions";
-import { ModalPhoto } from "./Modal";
-import { Image as CachedImage } from "react-native-expo-image-cache";
-import { TextInput as CustomTextInput } from "react-native-paper";
-import { freeUsername } from "./freeUsername";
-import { useTheme } from "../../../Theme/ThemeProvider";
-import { Field } from "./components/Field";
-import { Buttons } from "./components/Buttons";
 import CountryPicker, {
   DARK_THEME,
   DEFAULT_THEME,
 } from "react-native-country-picker-modal";
+import { Image as CachedImage } from "react-native-expo-image-cache";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import LottieAnimation from "../../../components/lottieAnimation";
+import updateProfile from "../../../components/ProfileFunc/updateProfile";
+import { uploadImage } from "../../../components/ProfileFunc/uploadImage";
+import { fetchUser } from "../../../redux/actions";
+import { useTheme } from "../../../Theme/ThemeProvider";
+import { Buttons } from "./components/Buttons";
+import { Field } from "./components/Field";
+import { freeUsername } from "./freeUsername";
+import { ModalPhoto } from "./Modal";
 // fix contry picker problem
 function EditProfile(props) {
   const navigation = useNavigation();
@@ -78,18 +72,29 @@ function EditProfile(props) {
     setShowModal(true);
   };
 
-  const checkOnChange = (phoneNumber, country, city, username, imageUri) => {
+  const checkOnChange = (
+    phoneNumber,
+    country,
+    city,
+    username,
+    imageUri,
+    userName,
+    surN
+  ) => {
     if (
       phoneNumber == phoneNumber &&
       country == country &&
       city == city &&
       username == username &&
-      imageUri == propImage
+      name == userName &&
+      surN == secondName
     ) {
       navigation.goBack();
     } else {
-      uploadImage(propImage),
-        updateProfile(phoneNumber, country, city, username);
+      if (imageUri == propImage) {
+        uploadImage(propImage);
+      }
+      updateProfile(phoneNumber, country, city, username);
     }
   };
   const imagePropHandler = (imageProp) => {
@@ -123,7 +128,7 @@ function EditProfile(props) {
   const [showModal, setShowModal] = useState(false);
   const [propImage, setPropImage] = useState();
   const [name, setName] = useState(props.currentUser.name);
-  const [secondName, setSecondName] = useState();
+  const [secondName, setSecondName] = useState(props.currentUser.surname);
   const [withCountryNameButton, setWithCountryNameButton] = useState(false);
   const [withFlag, setWithFlag] = useState(true);
   const [withEmoji, setWithEmoji] = useState(true);
@@ -137,14 +142,11 @@ function EditProfile(props) {
       style={{ flex: 1, backgroundColor: colors.background }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <SafeAreaView style={{ flex: 1, backgroundColor: "transparent" }}>
+      <SafeAreaView style={styles.safeAreaViewContainer}>
         <ScrollView
           style={{
             backgroundColor: colors.background,
             flex: 1,
-          }}
-          contentContainerStyle={{
-            paddingBottom: Platform.OS === "android" ? 50 : 0,
           }}
           showsVerticalScrollIndicator={false}
         >
@@ -182,19 +184,7 @@ function EditProfile(props) {
                     />
                   )}
                 </View>
-                <View
-                  style={{
-                    position: "absolute",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    borderRadius: 50,
-                    bottom: 0,
-                    right: 20,
-                    height: 35,
-                    aspectRatio: 1 / 1,
-                    backgroundColor: colors.text,
-                  }}
-                >
+                <View style={styles.editIcon}>
                   <MaterialIcons
                     name="edit"
                     size={24}
@@ -248,9 +238,7 @@ function EditProfile(props) {
                   placeholder="Surname"
                   style={styles.textInputStyle}
                   placeholderTextColor={placeholderColor}
-                  onChangeText={(text) => {
-                    setSecondName(text);
-                  }}
+                  onChangeText={setSecondName}
                   defaultValue={secondName}
                 />
               </Field>
@@ -377,7 +365,9 @@ function EditProfile(props) {
                       country,
                       city,
                       username,
-                      propImage
+                      propImage,
+                      name,
+                      secondName
                     );
                     navigation.navigate("ProfileScreen", {
                       imageURI: propImage,
@@ -404,6 +394,7 @@ const makeStyles = (colors: any, theme, width) =>
     container: {
       flex: 1,
     },
+    safeAreaViewContainer: { flex: 1, backgroundColor: "transparent" },
     textStyle: {
       fontFamily: "WorkSans-Bold",
       color: colors.text,
@@ -465,6 +456,17 @@ const makeStyles = (colors: any, theme, width) =>
       width: "100%",
       height: "100%",
       borderRadius: 100,
+    },
+    editIcon: {
+      position: "absolute",
+      justifyContent: "center",
+      alignItems: "center",
+      borderRadius: 50,
+      bottom: 0,
+      right: 20,
+      height: 35,
+      aspectRatio: 1 / 1,
+      backgroundColor: colors.text,
     },
     userInput: {
       margin: 30,

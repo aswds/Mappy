@@ -1,6 +1,6 @@
 import { MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import {
   Dimensions,
   Image,
@@ -15,9 +15,11 @@ import {
   Keyboard,
   KeyboardAvoidingView,
 } from "react-native";
+import { FlatList } from "react-native-gesture-handler";
 import { actuatedNormalize } from "../../../components/actuaterNormalize";
 import { useTheme } from "../../../Theme/ThemeProvider";
 import { RenderImage } from "../RenderItems/RenderImage";
+import AddPhotoButtonComp from "./components/AddPhotoButtonComp";
 import { ShareButton } from "./ShareButton";
 import { DescriptionContainer, InputSection, Section } from "./styles";
 export const Description = () => {
@@ -35,19 +37,30 @@ export const Description = () => {
   const { theme } = useTheme();
   const colors = theme.colors;
   const styles = makeStyles(colors, theme);
-
+  const placeHolderTextColor = theme.dark ? "#AEAEAE" : "rgba(130,130,130,1)";
+  const borderColor = {
+    borderColor: theme.dark ? "#BEBDBD" : "rgb(0,0,0)",
+  };
   if (route.params?.photos) {
     setMedia(route.params.photos);
     delete route.params.photos;
   }
-
+  function onDelete(id) {
+    media.map((item) => {
+      console.log(item.id);
+    });
+    setMedia(
+      media.filter((item) => {
+        return item.id !== id;
+      })
+    );
+  }
   return (
     <>
       <ScrollView
         style={styles.container}
         contentContainerStyle={{ justifyContent: "space-between" }}
       >
-        {/* fix KeyboardAvoidingView */}
         <TouchableWithoutFeedback
           style={{ flex: 1 }}
           onPress={() => {
@@ -62,10 +75,10 @@ export const Description = () => {
             >
               <Section>
                 <Text style={styles.title}>Title</Text>
-                <InputSection style={{ borderColor: "#BEBDBD" }}>
+                <InputSection style={borderColor}>
                   <TextInput
                     placeholder="Write title to your post"
-                    placeholderTextColor={"#AEAEAE"}
+                    placeholderTextColor={placeHolderTextColor}
                     onChangeText={setTitle}
                     style={{
                       padding: 10,
@@ -79,10 +92,10 @@ export const Description = () => {
               </Section>
               <Section style={{ maxHeight: "40%" }}>
                 <Text style={styles.title}>Caption</Text>
-                <InputSection style={{ borderColor: "#BEBDBD" }}>
+                <InputSection style={borderColor}>
                   <TextInput
                     placeholder="Write"
-                    placeholderTextColor={"#AEAEAE"}
+                    placeholderTextColor={placeHolderTextColor}
                     style={{
                       padding: 10,
                       color: colors.text,
@@ -96,33 +109,18 @@ export const Description = () => {
           </KeyboardAvoidingView>
         </TouchableWithoutFeedback>
         <View style={styles.scrollViewContainer}>
-          <ScrollView
-            showsHorizontalScrollIndicator={false}
-            horizontal
-            key={Math.random()}
+          <FlatList
+            ListHeaderComponent={
+              <AddPhotoButtonComp theme navigation={navigation} />
+            }
+            horizontal={true}
             contentContainerStyle={styles.scrollViewContentCont}
-            style={{
-              flex: 1,
-              backgroundColor: colors.background,
-            }}
-          >
-            <TouchableOpacity
-              style={{ ...styles.modalButton }}
-              onPress={() => {
-                navigation.navigate("ImagePicker");
-              }}
-            >
-              <View style={styles.addPhotosContainer}>
-                <MaterialIcons
-                  name="add-photo-alternate"
-                  size={40}
-                  color="black"
-                />
-              </View>
-            </TouchableOpacity>
-            {media &&
-              media.map((item, key) => <RenderImage item={item} key={key} />)}
-          </ScrollView>
+            data={media}
+            renderItem={({ item }) => (
+              <RenderImage item={item} id={item.id} onDelete={onDelete} />
+            )}
+            keyExtractor={(item) => item.id}
+          />
         </View>
       </ScrollView>
       <ShareButton
@@ -147,18 +145,7 @@ const makeStyles = (colors, theme, inputHeight) =>
       flex: 1,
       backgroundColor: colors.background,
     },
-    addPhotosContainer: {
-      flex: 1,
-      backgroundColor: "rgba(219,219,219,0.33)",
-      borderRadius: 10,
-      shadowOpacity: 0.4,
-      shadowOffset: {
-        height: 2,
-        width: 0,
-      },
-      justifyContent: "center",
-      alignItems: "center",
-    },
+
     textInputStyle: {
       padding: 5,
       color: colors.text,
@@ -175,11 +162,6 @@ const makeStyles = (colors, theme, inputHeight) =>
       marginBottom: "5%",
     },
 
-    modalButton: {
-      height: actuatedNormalize(100),
-      width: actuatedNormalize(100),
-      margin: 10,
-    },
     nextButtonContainer: {
       width: "50%",
       alignItems: "center",

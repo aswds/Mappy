@@ -15,6 +15,7 @@ import {
   Image,
   StatusBar,
   Easing,
+  Alert,
 } from "react-native";
 import { useTheme } from "../../../Theme/ThemeProvider";
 import { PanGestureHandler } from "react-native-gesture-handler";
@@ -26,28 +27,48 @@ import RatingButtons from "./components/RatingButtons";
 import MapView, { Callout, PROVIDER_GOOGLE } from "react-native-maps";
 import { mapDarkStyle } from "../../../components/mapDarkStyle";
 import { useNavigation } from "@react-navigation/native";
-
+import { Feather } from "@expo/vector-icons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 const PostModal = (props) => {
+  const { data } = props;
+  const location = useRef({
+    latitude: undefined,
+    longitude: undefined,
+  });
+  useEffect(() => {
+    (location.current.latitude = data.location?.latitude),
+      (location.current.longitude = data.location?.longitude);
+  });
+
   const [animation, setAnimation] = useState(new Animated.Value(0));
+  const [animationBorder, setAnimationBorder] = useState(new Animated.Value(0));
   const [isAnimationRan, setIsAnimationRan] = useState(false);
   const [userCanScroll, setUserCanScroll] = useState(true);
+
   const { theme } = useTheme();
   const colors = theme.colors;
-  const { data } = props;
   const iconSize = Dimensions.get("window").width * 0.1;
   const styles = makeStyle(theme, colors);
   const navigation = useNavigation();
   function closeModal() {
     setIsAnimationRan(false), props.hideModal();
     setAnimation(new Animated.Value(0));
+    setAnimationBorder(new Animated.Value(0));
   }
   const animationStart = async () => {
     if (!isAnimationRan) {
-      await Animated.timing(animation, {
-        toValue: 1,
-        duration: 250,
-        useNativeDriver: false,
-      }).start(),
+      Animated.parallel([
+        Animated.timing(animation, {
+          toValue: 1,
+          duration: 250,
+          useNativeDriver: false,
+        }),
+        Animated.timing(animationBorder, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: false,
+        }),
+      ]).start(),
         setIsAnimationRan(true);
     }
   };
@@ -55,9 +76,16 @@ const PostModal = (props) => {
     inputRange: [0, 1],
     outputRange: ["85%", "100%"],
   });
+  const modalBorderRad = animationBorder.interpolate({
+    inputRange: [0, 1],
+    outputRange: [40, 0],
+  });
   const modalStyle = {
     height: modalHeight,
+    borderTopLeftRadius: modalBorderRad,
+    borderTopRightRadius: modalBorderRad,
   };
+  const insets = useSafeAreaInsets();
 
   return (
     <Modal
@@ -76,57 +104,88 @@ const PostModal = (props) => {
           }}
         >
           <View style={styles.scrollViewContainer}>
-            <SafeAreaView style={{ flex: 1 }}>
-              <ScrollView
-                onScroll={animationStart}
-                scrollEnabled={userCanScroll}
-                style={styles.scrollViewContainer}
-                scrollEventThrottle={1}
-              >
-                <View>
-                  <View style={styles.headerContainer}>
-                    <View style={styles.titleContainer}>
-                      <Title style={{ color: colors.text }} numberOfLines={3}>
-                        {data.title}
-                      </Title>
-                    </View>
-                    <CloseButton
-                      closeModal={closeModal}
-                      iconSize={iconSize}
-                      color={colors.text}
-                    />
+            <ScrollView
+              onScroll={animationStart}
+              scrollEnabled={userCanScroll}
+              style={styles.scrollViewContainer}
+              scrollEventThrottle={1}
+              contentContainerStyle={{
+                paddingTop: insets.top,
+                paddingBottom: insets.bottom,
+              }}
+              showsVerticalScrollIndicator={false}
+            >
+              <View>
+                <View style={styles.headerContainer}>
+                  <View style={styles.titleContainer}>
+                    <Title style={{ color: colors.text }} numberOfLines={3}>
+                      {data.title}
+                    </Title>
                   </View>
-                  <View style={{}}>
-                    <View
+                  <CloseButton
+                    closeModal={closeModal}
+                    iconSize={iconSize}
+                    color={colors.text}
+                  />
+                </View>
+                <View style={{}}>
+                  <View
+                    style={{
+                      height: Dimensions.get("window").width * 0.9,
+                      width: "100%",
+                    }}
+                  >
+                    <Swiper images={data.images} type={data.type} />
+                  </View>
+                </View>
+                <View>
+                  <ContentContainer>
+                    <Text style={styles.textStyle}>{data.caption}</Text>
+                  </ContentContainer>
+                  <TitleContainer>
+                    <Title style={{ color: colors.text }}>Rating</Title>
+                  </TitleContainer>
+                  <RatingButtons
+                    rate={data.rate}
+                    bgColor={theme.dark ? "#1D1D1D" : "white"}
+                  />
+                  <ContentContainer>
+                    <Text style={styles.textStyle}>
+                      {data.rateCaption ? data.rateCaption : ""}
+                    </Text>
+                  </ContentContainer>
+                </View>
+                <View>
+                  <TitleContainer style={styles.locationTitleStyle}>
+                    <Title
                       style={{
-                        height: Dimensions.get("window").width * 0.9,
-                        width: "100%",
+                        color: colors.text,
                       }}
                     >
-                      <Swiper images={data.images} />
-                    </View>
-                  </View>
-                  <View>
-                    <ContentContainer>
-                      <Text style={styles.textStyle}>{data.caption}</Text>
-                    </ContentContainer>
-                    <TitleContainer>
-                      <Title style={{ color: colors.text }}>Rating</Title>
-                    </TitleContainer>
-                    <RatingButtons
-                      rate={data.rate}
-                      bgColor={theme.dark ? "#1D1D1D" : "white"}
-                    />
-                    <ContentContainer>
-                      <Text style={styles.textStyle}>
-                        {data.rateCaption ? data.rateCaption : ""}
-                      </Text>
-                    </ContentContainer>
-                  </View>
-                  <View>
-                    <TitleContainer>
-                      <Title style={{ color: colors.text }}>Location</Title>
-                    </TitleContainer>
+                      Location
+                    </Title>
+                    <TouchableOpacity
+                      style={{ paddingHorizontal: 10 }}
+                      onPress={() => {
+                        Alert.alert(
+                          "Location ",
+                          "To see place in full screen, just tap on the map"
+                        );
+                      }}
+                    >
+                      <Feather name="info" size={20} color={colors.text} />
+                    </TouchableOpacity>
+                  </TitleContainer>
+                  <ContentContainer>
+                    <Text style={styles.locationText} numberOfLines={1}>
+                      New York, Backer street fd Dfd
+                    </Text>
+                  </ContentContainer>
+                  <View
+                    style={{
+                      height: Dimensions.get("window").height * 0.45,
+                    }}
+                  >
                     <View
                       style={{
                         height: Dimensions.get("window").height * 0.4,
@@ -142,22 +201,20 @@ const PostModal = (props) => {
                         customMapStyle={mapDarkStyle}
                         showsUserLocation={true}
                         mapType="standard"
+                        region={{
+                          latitude: location.current.latitude,
+                          longitude: location.current.longitude,
+                          latitudeDelta: 0.4,
+                          longitudeDelta: 15,
+                        }}
                         style={[StyleSheet.absoluteFillObject, styles.mapStyle]}
                         provider={PROVIDER_GOOGLE}
-                        onMapReady={() => {
-                          Platform.OS === "android"
-                            ? PermissionsAndroid.request(
-                                PermissionsAndroid.PERMISSIONS
-                                  .ACCESS_FINE_LOCATION
-                              )
-                            : "";
-                        }}
                       />
                     </View>
                   </View>
                 </View>
-              </ScrollView>
-            </SafeAreaView>
+              </View>
+            </ScrollView>
           </View>
         </Animated.View>
       </View>
@@ -179,8 +236,6 @@ const makeStyle = (theme, colors) => {
       flexDirection: "row",
       width: "100%",
       backgroundColor: theme.dark ? "#1D1D1D" : "white",
-      borderTopRightRadius: 40,
-      borderTopLeftRadius: 40,
       shadowOffset: {
         width: 0,
         height: 2,
@@ -228,6 +283,17 @@ const makeStyle = (theme, colors) => {
     mapStyle: {
       borderRadius: 10,
       borderWidth: 2,
+    },
+    locationTitleStyle: {
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    locationText: {
+      fontSize: 15,
+      color: colors.text,
+      fontFamily: "WorkSans-Bold",
+      maxWidth: "85%",
+      alignItems: "flex-start",
     },
   });
 };

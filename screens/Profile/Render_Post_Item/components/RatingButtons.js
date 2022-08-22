@@ -7,6 +7,7 @@ export default function RatingButtons({ rate, bgColor }) {
   const colors = theme.colors;
   const styles = makeStyles(theme, colors);
   const rateBackground = "rgba(219,219,219,0.6)";
+  const iconColor = theme.dark ? colors.background : "black";
   const iconSize = 25;
   return (
     <View style={styles.scrollViewContainer}>
@@ -31,7 +32,7 @@ export default function RatingButtons({ rate, bgColor }) {
             <MaterialCommunityIcons
               name="emoticon-excited-outline"
               size={iconSize}
-              color={colors.background}
+              color={iconColor}
             />
           }
         />
@@ -41,7 +42,7 @@ export default function RatingButtons({ rate, bgColor }) {
             <MaterialCommunityIcons
               name="emoticon-happy-outline"
               size={iconSize}
-              color={colors.background}
+              color={iconColor}
             />
           }
         />
@@ -51,7 +52,7 @@ export default function RatingButtons({ rate, bgColor }) {
             <MaterialCommunityIcons
               name="emoticon-neutral-outline"
               size={iconSize}
-              color={colors.background}
+              color={iconColor}
             />
           }
         />
@@ -61,7 +62,7 @@ export default function RatingButtons({ rate, bgColor }) {
             <MaterialCommunityIcons
               name="emoticon-confused-outline"
               size={iconSize}
-              color={colors.background}
+              color={iconColor}
             />
           }
         />
@@ -71,7 +72,7 @@ export default function RatingButtons({ rate, bgColor }) {
             <MaterialCommunityIcons
               name="emoticon-sad-outline"
               size={iconSize}
-              color={colors.background}
+              color={iconColor}
             />
           }
         />
